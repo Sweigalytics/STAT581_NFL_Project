@@ -1,9 +1,11 @@
+library(bestglm)
 library(caret) # Used for confusionMatrix
 library(dplyr)
 library(DBI)
 library(glmnet)
 library(ggpubr)
 library(tidyverse)
+library(xgboost)
 
 db <- 'nfl'
 host_db <- Sys.getenv(x = 'POSTGRES_HOST')
@@ -118,7 +120,22 @@ df_qbs_test_scaled <- predict(normParam, df_qbs_test)
 x.train <- data.matrix(subset(df_qbs_train_scaled, select = -c(franchise_qb)))
 y.train <- data.matrix(df_qbs_train_scaled[, c('franchise_qb')])
 
-logistic.fit <- cv.glmnet(x.train, y.train, family = "binomial")
+### Storing the number of rows into a variable
+x.train.rows <- dim(x.train)[1]
+
+## Best Subsets
+df_qbs_train.bglm <- rename(df_qbs_train, y=franchise_qb)
+
+best.logit <- bestglm(df_qbs_train.bglm, IC = "BIC", family=binomial, method="exhaustive")
+
+summary(best.logit$BestModel)
+
+## Ridge Regression/Lasso
+
+### Fit with a LOOCV by defining the folds as the number of rows in the training data.
+grid <- 10^seq (10, -2, length = 100)
+
+logistic.fit <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 1, lambda = grid, nfolds = x.train.rows)
 
 bestlam <- logistic.fit$lambda.min
 
@@ -133,3 +150,50 @@ logistic.confusion
 
 
 ## XGBoost
+dtrain <- xgb.DMatrix(data = x.train,label = y.train)
+dtest <- xgb.DMatrix(data = x.test, label = y.test)
+
+hyper_grid <- expand.grid(max_depth = seq(3, 6, 1), eta = seq(.2, .35, .01))  
+
+xgb_train_logloss <- NULL
+xgb_test_logloss <- NULL
+
+for (j in 1:nrow(hyper_grid)) {
+  set.seed(581)
+  m_xgb_untuned <- xgb.cv(
+    data = dtrain,
+    nrounds = 1000,
+    objective = "binary:logistic",
+    early_stopping_rounds = 3,
+    nfold = x.train.rows,
+    max_depth = hyper_grid$max_depth[j],
+    eta = hyper_grid$eta[j]
+  )
+  
+  xgb_train_logloss[j] <- m_xgb_untuned$evaluation_log$train_logloss_mean[m_xgb_untuned$best_iteration]
+  xgb_test_logloss[j] <- m_xgb_untuned$evaluation_log$test_logloss_mean[m_xgb_untuned$best_iteration]
+  
+  cat(j, "\n")
+} 
+
+## Pulling the tuned parameters.
+best_max_depth <- hyper_grid[which.min(xgb_test_logloss), ]$max_depth
+best_eta <- hyper_grid[which.min(xgb_test_logloss), ]$eta
+
+set.seed(581)
+
+m1_xgb <-
+  xgboost(
+    data = dtrain,
+    nrounds = 1000,
+    objective = "binary:logistic",
+    early_stopping_rounds = 3,
+    max_depth = best_max_depth,
+    eta = best_eta
+  )   
+
+xg.pred <- predict(m1_xgb, dtest)
+xg.pred.labels <- as.factor(ifelse(xg.pred > 0.5,"1","0"))
+
+xgb.confusion <- confusionMatrix(xg.pred.labels, as.factor(y.test), mode = "everything", positive = "1")
+xgb.confusion
