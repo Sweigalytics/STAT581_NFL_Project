@@ -4,6 +4,7 @@ library(dplyr)
 library(DBI)
 library(glmnet)
 library(ggpubr)
+library(randomForest)
 library(tidyverse)
 library(xgboost)
 
@@ -123,7 +124,7 @@ y.train <- data.matrix(df_qbs_train_scaled[, c('franchise_qb')])
 ### Storing the number of rows into a variable
 x.train.rows <- dim(x.train)[1]
 
-## Best Subsets
+## Best Subsets (example here: https://bookdown.org/tpinto_home/Regularisation/best-subset-selection.html)
 df_qbs_train.bglm <- rename(df_qbs_train, y=franchise_qb)
 
 best.logit <- bestglm(df_qbs_train.bglm, IC = "BIC", family=binomial, method="exhaustive")
@@ -137,6 +138,8 @@ grid <- 10^seq (10, -2, length = 100)
 
 logistic.fit <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 1, lambda = grid, nfolds = x.train.rows)
 
+plot(logistic.fit, xvar="lambda", label=TRUE)
+
 bestlam <- logistic.fit$lambda.min
 
 x.test <- data.matrix(subset(df_qbs_test_scaled, select = -c(franchise_qb)))
@@ -149,7 +152,32 @@ logistic.confusion <- confusionMatrix(as.factor(logistic.preds), as.factor(y.tes
 logistic.confusion
 
 
+## Random Forest
+x.train <- data.matrix(subset(df_qbs_train, select = -c(franchise_qb)))
+y.train <- data.matrix(df_qbs_train[, c('franchise_qb')])
+
+x.test <- data.matrix(subset(df_qbs_test, select = -c(franchise_qb)))
+y.test <- data.matrix(df_qbs_test[, c('franchise_qb')])
+
+set.seed(581)
+
+rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train, importance=TRUE, ntree=500)
+rf.pred <- predict(rf.fit, newdata = df_qbs_test)
+
+rf.confusion <- confusionMatrix(rf.pred, as.factor(y.test), mode = "everything", positive = "1")
+rf.confusion
+
+importance(rf.fit)
+varImpPlot(rf.fit)
+
+
 ## XGBoost
+x.train <- data.matrix(subset(df_qbs_train, select = -c(franchise_qb)))
+y.train <- data.matrix(df_qbs_train[, c('franchise_qb')])
+
+x.test <- data.matrix(subset(df_qbs_test, select = -c(franchise_qb)))
+y.test <- data.matrix(df_qbs_test[, c('franchise_qb')])
+
 dtrain <- xgb.DMatrix(data = x.train,label = y.train)
 dtest <- xgb.DMatrix(data = x.test, label = y.test)
 
