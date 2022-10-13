@@ -1,6 +1,12 @@
 drop table if exists public.team_wins_point_differential;
-create table if not exists public.team_wins_point_differential AS
-with wins as 
+create table if not exists public.team_wins_point_differential as
+with h as -- Find the number of games with Hurts as primary passer to calculate team's win % prior to QB's start over those number of games.
+(
+	select COUNT(*) as hurts_games
+	from public.primary_passer_games
+	where passer_player_id = '00-0036389'
+),
+wins as 
 (
 	select game_id
 			,case 
@@ -26,15 +32,36 @@ team_games as
 		,week
 	from public.schedules
 	where date(gameday) <= (current_date - 1)
+),
+team_wins_games as
+(
+	select *
+		,row_number() over (partition by z.team order by z.game_id) as team_game_number
+	from
+	(
+		select team
+			,game_id
+			,season
+			,week
+			,win
+			,team_point_differential
+		from public.schedules_1997_1998
+		union ALL
+		select t.team
+			,t.game_id
+			,t.season
+			,t.week
+			,case when t.team = w.winning_team then 1 else 0 end as win
+			,case when t.team = winning_team then w.point_differential else -w.point_differential end team_point_differential
+		from team_games t
+		left join wins w 
+			on t.game_id = w.game_id
+	) Z
 )
-select t.team
-	,t.game_id
-	,t.season
-	,t.week
-	,case when t.team = w.winning_team then 1 else 0 end as win
-	,case when t.team = winning_team then w.point_differential else -w.point_differential end team_point_differential
-	,row_number() over (partition by t.team order by t.game_id) as team_game_number
-from team_games t
-left join wins w 
-	on t.game_id = w.game_id
+select T.*
+	,(SUM(T.win) over (partition by T.team order by T.team_game_number rows (select hurts_games from h) preceding) - T.win) as prior_hurts_games_wins
+	,((SUM(T.win) over (partition by T.team order by T.team_game_number rows (select hurts_games from h) preceding)) - T.win)::float / (select hurts_games from h) as prior_hurts_games_win_perc
+from team_wins_games T
+order by T.team
+	,T.team_game_number
 ;

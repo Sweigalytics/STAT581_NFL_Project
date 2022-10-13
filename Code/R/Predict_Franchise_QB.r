@@ -56,20 +56,22 @@ ggarrange(
   plot_interceptions_per_attempt,
   plot_passing_yards_per_attempt,
   plot_passing_completion_percentage,
+  plot_mean_cpoe,
   plot_rushing_yards_per_attempt,
   plot_primary_passing_tds_per_game,
   plot_primary_rushing_tds_per_game,
   plot_sacks_per_play,
   plot_interceptions_per_attempt,
   plot_fumbles_per_attempt,
-  plot_turnovers_per_attempt
+  plot_turnovers_per_attempt,
+  plot_epa_per_play
 )
 
 
 # Train/Test Split
 
 ### Only including the variables we want to consider for prediction.
-pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "franchise_qb")
+pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "franchise_qb")
 
 set.seed(581)
 spec = c(train = .8, test = .2)
@@ -100,13 +102,15 @@ ggarrange(
   plot_train_interceptions_per_attempt,
   plot_train_passing_yards_per_attempt,
   plot_train_passing_completion_percentage,
+  plot_train_mean_cpoe,
   plot_train_rushing_yards_per_attempt,
   plot_train_primary_passing_tds_per_game,
   plot_train_primary_rushing_tds_per_game,
   plot_train_sacks_per_play,
   plot_train_interceptions_per_attempt,
   plot_train_fumbles_per_attempt,
-  plot_train_turnovers_per_attempt
+  plot_train_turnovers_per_attempt,
+  plot_train_epa_per_play
 )
 
 # Training and Evaluating Predictive Models
@@ -161,7 +165,9 @@ y.test <- data.matrix(df_qbs_test[, c('franchise_qb')])
 
 set.seed(581)
 
-rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train, importance=TRUE, ntree=500)
+#rf.fm <- formula(paste("franchise_qb", "~", pred_vars))
+
+rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train[, pred_vars], importance=TRUE, ntree=500)
 rf.pred <- predict(rf.fit, newdata = df_qbs_test)
 
 rf.confusion <- confusionMatrix(rf.pred, as.factor(y.test), mode = "everything", positive = "1")

@@ -18,6 +18,7 @@ select G.passer_player_id
 	,P.passing_yards
 	,P.passing_fumbles_lost
 	,(P.pass_successes)::float / P.pass_attempts  as passing_completion_percentage
+	,P.mean_cpoe
 	,(P.passing_yards / P.pass_attempts)::float as passing_yards_per_attempt
 	,P.primary_passing_touchdowns
 	,(P.primary_passing_touchdowns)::float / (select hurts_games from h)::float as primary_passing_tds_per_game
@@ -33,6 +34,7 @@ select G.passer_player_id
 	,P.passing_fumbles_lost + R.rushing_fumbles_lost as total_fumbles_lost
 	,((P.passing_fumbles_lost + R.rushing_fumbles_lost) / (P.pass_attempts + R.rush_attempts))::float as fumbles_per_attempt
 	,((P.passing_interceptions + P.passing_fumbles_lost + R.rushing_fumbles_lost) / (P.pass_attempts + R.rush_attempts))::float as turnovers_per_attempt
+	,E.epa_per_play
 from
 (
 	select distinct passer_player_id 
@@ -53,6 +55,7 @@ left join -- Joining the passing stats
 		,SUM(A.interception) as passing_interceptions
 		,COUNT(case when A.posteam = A.td_team and R.game_id is not null then A.td_player_id END) as primary_passing_touchdowns -- Need to include A.posteam = A.td_team, otherwise Pick 6's would be counted as TDs.
 		,SUM(case when R.game_id is not null then A.passing_yards END) as primary_passing_yards
+		,AVG(cpoe) as mean_cpoe
 	from public."nflfastR_pbp" A
 	inner join public.primary_passer_games_hurts_minimum r
 		on A.game_id = r.game_id
@@ -77,6 +80,29 @@ left join -- Joining the rushing stats
 	group by rusher_player_id
 ) R
 	on G.passer_player_id = R.rusher_player_id
+left join -- Joining EPA stats, which can be from either passing or rushing plays
+(
+	select A.passer_player_id
+		,AVG(Z.qb_epa) as epa_per_play
+	from public."nflfastR_pbp" A
+	inner join public.primary_passer_games_hurts_minimum r
+		on A.game_id = r.game_id
+		and A.passer_player_id  = r.passer_player_id
+	inner join
+	(
+		select game_id
+			,play_id
+			,id as passer_player_id
+			,qb_epa
+		from public."nflfastR_pbp"
+		where (pass = 1 or rush = 1)
+	) Z
+		on A.game_id = Z.game_id
+		and A.passer_player_id = Z.passer_player_id
+	where r.primary_game_number <= (select hurts_games from h)
+	group by A.passer_player_id
+) E
+	on G.passer_player_id = E.passer_player_id
 where (P.passer_player_id is not null or R.rusher_player_id is not NULL) -- Ensures we only include players in `public.primary_passer_games_hurts_minimum`
 order by G.primary_passing_games DESC
 ;

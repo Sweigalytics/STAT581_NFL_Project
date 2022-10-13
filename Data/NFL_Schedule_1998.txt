@@ -1,0 +1,252 @@
+Week,Day,Date,Time,Winner/tie,,Loser/tie,,PtsW,PtsL,YdsW,TOW,YdsL,TOL
+1,Sun,1998-09-06,1:00PM,Atlanta Falcons,@,Carolina Panthers,boxscore,19,14,323,1,317,2
+1,Sun,1998-09-06,1:00PM,Jacksonville Jaguars,@,Chicago Bears,boxscore,24,23,367,3,321,2
+1,Sun,1998-09-06,1:00PM,Tennessee Oilers,@,Cincinnati Bengals,boxscore,23,14,353,0,292,1
+1,Sun,1998-09-06,1:00PM,Green Bay Packers,,Detroit Lions,boxscore,38,19,342,0,321,2
+1,Sun,1998-09-06,1:00PM,Minnesota Vikings,,Tampa Bay Buccaneers,boxscore,31,7,298,1,319,2
+1,Sun,1998-09-06,1:00PM,New Orleans Saints,@,St. Louis Rams,boxscore,24,17,232,1,314,2
+1,Sun,1998-09-06,1:00PM,New York Giants,,Washington Redskins,boxscore,31,24,235,1,331,3
+1,Sun,1998-09-06,1:00PM,Seattle Seahawks,@,Philadelphia Eagles,boxscore,38,0,406,0,174,3
+1,Sun,1998-09-06,1:00PM,Pittsburgh Steelers,@,Baltimore Ravens,boxscore,20,13,271,3,376,0
+1,Sun,1998-09-06,4:05PM,Dallas Cowboys,,Arizona Cardinals,boxscore,38,10,444,3,205,2
+1,Sun,1998-09-06,4:15PM,San Diego Chargers,,Buffalo Bills,boxscore,16,14,254,2,297,2
+1,Sun,1998-09-06,4:15PM,Miami Dolphins,@,Indianapolis Colts,boxscore,24,15,272,1,337,4
+1,Sun,1998-09-06,4:15PM,San Francisco 49ers,,New York Jets,boxscore,36,30,557,1,465,1
+1,Sun,1998-09-06,8:20PM,Kansas City Chiefs,,Oakland Raiders,boxscore,28,8,300,0,264,5
+1,Mon,1998-09-07,8:20PM,Denver Broncos,,New England Patriots,boxscore,27,21,339,0,339,0
+2,Sun,1998-09-13,1:00PM,Atlanta Falcons,,Philadelphia Eagles,boxscore,17,12,245,0,284,0
+2,Sun,1998-09-13,1:00PM,Miami Dolphins,,Buffalo Bills,boxscore,13,7,259,0,187,1
+2,Sun,1998-09-13,1:00PM,New Orleans Saints,,Carolina Panthers,boxscore,19,14,311,0,375,3
+2,Sun,1998-09-13,1:00PM,Pittsburgh Steelers,,Chicago Bears,boxscore,17,12,251,1,320,2
+2,Sun,1998-09-13,1:00PM,Cincinnati Bengals,@,Detroit Lions,boxscore,34,28,384,0,412,2
+2,Sun,1998-09-13,1:00PM,Green Bay Packers,,Tampa Bay Buccaneers,boxscore,23,15,260,2,211,4
+2,Sun,1998-09-13,1:00PM,Jacksonville Jaguars,,Kansas City Chiefs,boxscore,21,16,256,0,364,2
+2,Sun,1998-09-13,1:00PM,Minnesota Vikings,@,St. Louis Rams,boxscore,38,31,421,3,410,4
+2,Sun,1998-09-13,1:00PM,Baltimore Ravens,@,New York Jets,boxscore,24,10,331,1,276,3
+2,Sun,1998-09-13,1:00PM,San Diego Chargers,@,Tennessee Oilers,boxscore,13,7,320,0,250,0
+2,Sun,1998-09-13,4:15PM,Seattle Seahawks,,Arizona Cardinals,boxscore,33,14,244,2,274,4
+2,Sun,1998-09-13,4:15PM,Denver Broncos,,Dallas Cowboys,boxscore,42,23,515,0,370,0
+2,Sun,1998-09-13,4:15PM,Oakland Raiders,,New York Giants,boxscore,20,17,414,1,233,1
+2,Sun,1998-09-13,8:20PM,New England Patriots,,Indianapolis Colts,boxscore,29,6,321,0,309,4
+2,Mon,1998-09-14,8:20PM,San Francisco 49ers,@,Washington Redskins,boxscore,45,10,504,0,322,3
+3,Sun,1998-09-20,1:00PM,St. Louis Rams,@,Buffalo Bills,boxscore,34,33,406,4,407,2
+3,Sun,1998-09-20,1:00PM,Green Bay Packers,@,Cincinnati Bengals,boxscore,13,6,328,3,160,0
+3,Sun,1998-09-20,1:00PM,New York Jets,,Indianapolis Colts,boxscore,44,6,505,2,310,2
+3,Sun,1998-09-20,1:00PM,Minnesota Vikings,,Detroit Lions,boxscore,29,6,287,0,279,4
+3,Sun,1998-09-20,1:00PM,Kansas City Chiefs,,San Diego Chargers,boxscore,23,7,251,1,152,6
+3,Sun,1998-09-20,1:00PM,Miami Dolphins,,Pittsburgh Steelers,boxscore,21,0,219,1,200,3
+3,Sun,1998-09-20,1:00PM,New England Patriots,,Tennessee Oilers,boxscore,27,16,322,0,306,2
+3,Sun,1998-09-20,4:05PM,Tampa Bay Buccaneers,,Chicago Bears,boxscore,27,15,364,2,254,2
+3,Sun,1998-09-20,4:05PM,Seattle Seahawks,,Washington Redskins,boxscore,24,14,299,0,465,3
+3,Sun,1998-09-20,4:15PM,Denver Broncos,@,Oakland Raiders,boxscore,34,17,338,2,258,3
+3,Sun,1998-09-20,4:15PM,Jacksonville Jaguars,,Baltimore Ravens,boxscore,24,10,519,1,313,1
+3,Sun,1998-09-20,8:20PM,Arizona Cardinals,,Philadelphia Eagles,boxscore,17,3,282,1,317,3
+3,Mon,1998-09-21,8:20PM,Dallas Cowboys,@,New York Giants,boxscore,31,7,302,0,252,4
+4,Sun,1998-09-27,1:00PM,Green Bay Packers,@,Carolina Panthers,boxscore,37,30,487,4,230,1
+4,Sun,1998-09-27,1:00PM,New Orleans Saints,@,Indianapolis Colts,boxscore,19,13,320,1,357,3
+4,Sun,1998-09-27,1:00PM,Arizona Cardinals,@,St. Louis Rams,boxscore,20,17,281,1,264,0
+4,Sun,1998-09-27,1:00PM,Oakland Raiders,@,Dallas Cowboys,boxscore,13,12,288,0,275,3
+4,Sun,1998-09-27,1:00PM,Denver Broncos,@,Washington Redskins,boxscore,38,16,365,0,387,3
+4,Sun,1998-09-27,1:00PM,Jacksonville Jaguars,@,Tennessee Oilers,boxscore,27,22,297,3,219,3
+4,Sun,1998-09-27,1:00PM,Kansas City Chiefs,@,Philadelphia Eagles,boxscore,24,21,393,0,361,1
+4,Sun,1998-09-27,4:05PM,Pittsburgh Steelers,,Seattle Seahawks,boxscore,13,10,285,0,230,4
+4,Sun,1998-09-27,4:15PM,San Francisco 49ers,,Atlanta Falcons,boxscore,31,20,538,2,369,4
+4,Sun,1998-09-27,4:15PM,Minnesota Vikings,@,Chicago Bears,boxscore,31,28,351,0,452,1
+4,Sun,1998-09-27,4:15PM,New York Giants,@,San Diego Chargers,boxscore,34,16,313,1,355,4
+4,Sun,1998-09-27,8:20PM,Baltimore Ravens,,Cincinnati Bengals,boxscore,31,24,408,1,275,0
+4,Mon,1998-09-28,8:20PM,Detroit Lions,,Tampa Bay Buccaneers,boxscore,27,6,280,1,133,2
+5,Sun,1998-10-04,1:00PM,Atlanta Falcons,,Carolina Panthers,boxscore,51,23,323,2,346,6
+5,Sun,1998-10-04,1:00PM,Buffalo Bills,,San Francisco 49ers,boxscore,26,21,352,0,377,4
+5,Sun,1998-10-04,1:00PM,New York Jets,,Miami Dolphins,boxscore,20,9,289,1,153,3
+5,Sun,1998-10-04,1:00PM,New England Patriots,@,New Orleans Saints,boxscore,30,27,388,4,276,2
+5,Sun,1998-10-04,1:00PM,Chicago Bears,,Detroit Lions,boxscore,31,27,405,5,340,0
+5,Sun,1998-10-04,1:00PM,Indianapolis Colts,,San Diego Chargers,boxscore,17,12,192,1,295,3
+5,Sun,1998-10-04,1:00PM,Dallas Cowboys,@,Washington Redskins,boxscore,31,10,387,1,256,1
+5,Sun,1998-10-04,4:05PM,Oakland Raiders,@,Arizona Cardinals,boxscore,23,20,222,3,236,4
+5,Sun,1998-10-04,4:15PM,Denver Broncos,,Philadelphia Eagles,boxscore,41,16,423,2,157,2
+5,Sun,1998-10-04,4:15PM,Tampa Bay Buccaneers,,New York Giants,boxscore,20,3,234,2,135,3
+5,Sun,1998-10-04,8:20PM,Kansas City Chiefs,,Seattle Seahawks,boxscore,17,6,251,5,167,4
+5,Mon,1998-10-05,8:20PM,Minnesota Vikings,@,Green Bay Packers,boxscore,37,24,545,1,306,3
+6,Sun,1998-10-11,1:00PM,Buffalo Bills,@,Indianapolis Colts,boxscore,31,24,381,0,341,2
+6,Sun,1998-10-11,1:00PM,Dallas Cowboys,,Carolina Panthers,boxscore,27,20,428,2,304,3
+6,Sun,1998-10-11,1:00PM,Cincinnati Bengals,,Pittsburgh Steelers,boxscore,25,20,389,0,386,1
+6,Sun,1998-10-11,1:00PM,San Francisco 49ers,@,New Orleans Saints,boxscore,31,0,459,0,167,1
+6,Sun,1998-10-11,1:00PM,Tennessee Oilers,@,Baltimore Ravens,boxscore,12,8,344,1,263,1
+6,Sun,1998-10-11,1:00PM,New England Patriots,,Kansas City Chiefs,boxscore,40,10,438,1,134,2
+6,Sun,1998-10-11,1:00PM,Philadelphia Eagles,,Washington Redskins,boxscore,17,12,198,1,278,3
+6,Sun,1998-10-11,4:05PM,Arizona Cardinals,,Chicago Bears,boxscore,20,7,288,5,289,8
+6,Sun,1998-10-11,4:15PM,St. Louis Rams,,New York Jets,boxscore,30,10,319,1,177,5
+6,Sun,1998-10-11,4:15PM,Denver Broncos,@,Seattle Seahawks,boxscore,21,16,373,2,319,1
+6,Sun,1998-10-11,4:15PM,Oakland Raiders,,San Diego Chargers,boxscore,7,6,159,1,195,4
+6,Sun,1998-10-11,8:20PM,Atlanta Falcons,@,New York Giants,boxscore,34,20,381,2,266,3
+6,Mon,1998-10-12,8:20PM,Jacksonville Jaguars,,Miami Dolphins,boxscore,28,21,385,1,374,2
+7,Thu,1998-10-15,8:15PM,Detroit Lions,,Green Bay Packers,boxscore,27,20,385,1,368,3
+7,Sun,1998-10-18,1:00PM,Atlanta Falcons,,New Orleans Saints,boxscore,31,23,297,0,322,4
+7,Sun,1998-10-18,1:00PM,Buffalo Bills,,Jacksonville Jaguars,boxscore,17,16,337,1,238,0
+7,Sun,1998-10-18,1:00PM,Tampa Bay Buccaneers,,Carolina Panthers,boxscore,16,13,349,2,290,0
+7,Sun,1998-10-18,1:00PM,Tennessee Oilers,,Cincinnati Bengals,boxscore,44,14,515,0,332,1
+7,Sun,1998-10-18,1:00PM,Minnesota Vikings,,Washington Redskins,boxscore,41,7,435,1,177,1
+7,Sun,1998-10-18,1:00PM,Pittsburgh Steelers,,Baltimore Ravens,boxscore,16,6,241,2,230,5
+7,Sun,1998-10-18,1:00PM,New York Giants,,Arizona Cardinals,boxscore,34,7,390,0,194,3
+7,Sun,1998-10-18,4:05PM,San Francisco 49ers,,Indianapolis Colts,boxscore,34,31,448,2,336,0
+7,Sun,1998-10-18,4:15PM,Miami Dolphins,,St. Louis Rams,boxscore,14,0,245,1,204,2
+7,Sun,1998-10-18,4:15PM,Chicago Bears,,Dallas Cowboys,boxscore,13,12,299,2,236,1
+7,Sun,1998-10-18,4:15PM,San Diego Chargers,,Philadelphia Eagles,boxscore,13,10,168,1,261,4
+7,Mon,1998-10-19,8:20PM,New York Jets,@,New England Patriots,boxscore,24,14,392,0,291,1
+8,Sun,1998-10-25,1:00PM,New York Jets,,Atlanta Falcons,boxscore,28,3,311,0,207,3
+8,Sun,1998-10-25,1:00PM,Minnesota Vikings,@,Detroit Lions,boxscore,34,13,329,3,351,1
+8,Sun,1998-10-25,1:00PM,Green Bay Packers,,Baltimore Ravens,boxscore,28,10,328,2,233,2
+8,Sun,1998-10-25,1:00PM,Miami Dolphins,,New England Patriots,boxscore,12,9,333,3,251,1
+8,Sun,1998-10-25,1:00PM,New Orleans Saints,,Tampa Bay Buccaneers,boxscore,9,3,266,1,238,3
+8,Sun,1998-10-25,1:00PM,San Francisco 49ers,@,St. Louis Rams,boxscore,28,10,303,2,168,4
+8,Sun,1998-10-25,4:05PM,Chicago Bears,@,Tennessee Oilers,boxscore,23,20,286,1,356,4
+8,Sun,1998-10-25,4:15PM,Oakland Raiders,,Cincinnati Bengals,boxscore,27,10,411,0,170,3
+8,Sun,1998-10-25,4:15PM,Denver Broncos,,Jacksonville Jaguars,boxscore,37,24,465,0,348,1
+8,Sun,1998-10-25,4:15PM,Seattle Seahawks,@,San Diego Chargers,boxscore,27,20,274,0,391,0
+8,Sun,1998-10-25,8:20PM,Buffalo Bills,@,Carolina Panthers,boxscore,30,14,426,1,360,3
+8,Mon,1998-10-26,8:20PM,Pittsburgh Steelers,@,Kansas City Chiefs,boxscore,20,13,272,1,290,3
+9,Sun,1998-11-01,1:00PM,Atlanta Falcons,,St. Louis Rams,boxscore,37,15,434,1,247,1
+9,Sun,1998-11-01,1:00PM,Buffalo Bills,,Miami Dolphins,boxscore,30,24,313,2,296,1
+9,Sun,1998-11-01,1:00PM,Carolina Panthers,,New Orleans Saints,boxscore,31,17,216,2,354,4
+9,Sun,1998-11-01,1:00PM,Denver Broncos,@,Cincinnati Bengals,boxscore,33,26,352,1,372,1
+9,Sun,1998-11-01,1:00PM,New England Patriots,@,Indianapolis Colts,boxscore,21,16,370,1,310,2
+9,Sun,1998-11-01,1:00PM,Arizona Cardinals,@,Detroit Lions,boxscore,17,15,209,2,280,6
+9,Sun,1998-11-01,1:00PM,Jacksonville Jaguars,@,Baltimore Ravens,boxscore,45,19,364,1,357,5
+9,Sun,1998-11-01,1:00PM,Tampa Bay Buccaneers,,Minnesota Vikings,boxscore,27,24,378,0,340,1
+9,Sun,1998-11-01,1:00PM,Washington Redskins,,New York Giants,boxscore,21,14,320,0,229,0
+9,Sun,1998-11-01,1:00PM,Tennessee Oilers,@,Pittsburgh Steelers,boxscore,41,31,321,0,401,3
+9,Sun,1998-11-01,4:05PM,New York Jets,@,Kansas City Chiefs,boxscore,20,17,306,1,204,3
+9,Sun,1998-11-01,4:15PM,Green Bay Packers,,San Francisco 49ers,boxscore,36,22,372,3,266,2
+9,Sun,1998-11-01,8:20PM,Oakland Raiders,@,Seattle Seahawks,boxscore,31,18,293,1,333,5
+9,Mon,1998-11-02,8:20PM,Dallas Cowboys,@,Philadelphia Eagles,boxscore,34,0,294,0,200,3
+10,Sun,1998-11-08,1:00PM,Atlanta Falcons,@,New England Patriots,boxscore,41,10,366,2,223,5
+10,Sun,1998-11-08,1:00PM,St. Louis Rams,@,Chicago Bears,boxscore,20,12,266,1,251,1
+10,Sun,1998-11-08,1:00PM,Jacksonville Jaguars,,Cincinnati Bengals,boxscore,24,11,272,1,318,2
+10,Sun,1998-11-08,1:00PM,Miami Dolphins,,Indianapolis Colts,boxscore,27,14,359,2,254,2
+10,Sun,1998-11-08,1:00PM,Dallas Cowboys,,New York Giants,boxscore,16,6,327,0,286,1
+10,Sun,1998-11-08,1:00PM,Philadelphia Eagles,,Detroit Lions,boxscore,10,9,289,0,257,0
+10,Sun,1998-11-08,1:00PM,Minnesota Vikings,,New Orleans Saints,boxscore,31,24,465,2,190,1
+10,Sun,1998-11-08,1:00PM,Baltimore Ravens,,Oakland Raiders,boxscore,13,10,213,1,356,3
+10,Sun,1998-11-08,4:05PM,San Francisco 49ers,,Carolina Panthers,boxscore,25,23,366,6,287,2
+10,Sun,1998-11-08,4:05PM,Arizona Cardinals,,Washington Redskins,boxscore,29,27,351,1,256,2
+10,Sun,1998-11-08,4:15PM,New York Jets,,Buffalo Bills,boxscore,34,12,398,3,182,2
+10,Sun,1998-11-08,4:15PM,Denver Broncos,,San Diego Chargers,boxscore,27,10,289,1,213,3
+10,Sun,1998-11-08,4:15PM,Seattle Seahawks,,Kansas City Chiefs,boxscore,24,12,202,2,357,4
+10,Sun,1998-11-08,8:20PM,Tennessee Oilers,@,Tampa Bay Buccaneers,boxscore,31,22,353,1,397,1
+10,Mon,1998-11-09,8:20PM,Pittsburgh Steelers,,Green Bay Packers,boxscore,27,20,360,1,256,1
+11,Sun,1998-11-15,1:00PM,Atlanta Falcons,,San Francisco 49ers,boxscore,31,19,298,1,383,2
+11,Sun,1998-11-15,1:00PM,Buffalo Bills,,New England Patriots,boxscore,13,10,391,3,206,0
+11,Sun,1998-11-15,1:00PM,Miami Dolphins,@,Carolina Panthers,boxscore,13,9,315,1,210,2
+11,Sun,1998-11-15,1:00PM,Minnesota Vikings,,Cincinnati Bengals,boxscore,24,3,349,3,194,2
+11,Sun,1998-11-15,1:00PM,Indianapolis Colts,,New York Jets,boxscore,24,23,357,2,369,2
+11,Sun,1998-11-15,1:00PM,New Orleans Saints,,St. Louis Rams,boxscore,24,3,237,0,234,3
+11,Sun,1998-11-15,1:00PM,Tennessee Oilers,,Pittsburgh Steelers,boxscore,23,14,338,1,310,2
+11,Sun,1998-11-15,1:00PM,Washington Redskins,,Philadelphia Eagles,boxscore,28,3,289,1,215,3
+11,Sun,1998-11-15,4:05PM,Oakland Raiders,,Seattle Seahawks,boxscore,20,17,380,3,293,3
+11,Sun,1998-11-15,4:05PM,San Diego Chargers,,Baltimore Ravens,boxscore,14,13,203,1,161,2
+11,Sun,1998-11-15,4:15PM,Dallas Cowboys,@,Arizona Cardinals,boxscore,35,28,354,0,480,2
+11,Sun,1998-11-15,4:15PM,Green Bay Packers,@,New York Giants,boxscore,37,3,433,0,127,3
+11,Sun,1998-11-15,4:15PM,Jacksonville Jaguars,,Tampa Bay Buccaneers,boxscore,29,24,374,0,343,3
+11,Sun,1998-11-15,8:20PM,Detroit Lions,,Chicago Bears,boxscore,26,3,391,0,252,0
+11,Mon,1998-11-16,8:20PM,Denver Broncos,@,Kansas City Chiefs,boxscore,30,7,379,0,221,1
+12,Sun,1998-11-22,1:00PM,Atlanta Falcons,,Chicago Bears,boxscore,20,13,358,2,210,3
+12,Sun,1998-11-22,1:00PM,Buffalo Bills,,Indianapolis Colts,boxscore,34,11,402,1,250,3
+12,Sun,1998-11-22,1:00PM,Dallas Cowboys,,Seattle Seahawks,boxscore,30,22,465,1,249,2
+12,Sun,1998-11-22,1:00PM,Detroit Lions,@,Tampa Bay Buccaneers,boxscore,28,25,300,0,428,2
+12,Sun,1998-11-22,1:00PM,Minnesota Vikings,,Green Bay Packers,boxscore,28,14,340,1,330,3
+12,Sun,1998-11-22,1:00PM,Pittsburgh Steelers,,Jacksonville Jaguars,boxscore,30,15,329,0,301,4
+12,Sun,1998-11-22,1:00PM,New York Giants,,Philadelphia Eagles,boxscore,20,0,261,1,214,2
+12,Sun,1998-11-22,1:01PM,Arizona Cardinals,@,Washington Redskins,boxscore,45,42,436,1,421,2
+12,Sun,1998-11-22,4:05PM,Carolina Panthers,@,St. Louis Rams,boxscore,24,20,257,1,281,2
+12,Sun,1998-11-22,4:15PM,Baltimore Ravens,@,Cincinnati Bengals,boxscore,20,13,338,2,242,2
+12,Sun,1998-11-22,4:15PM,Denver Broncos,,Oakland Raiders,boxscore,40,14,397,1,294,3
+12,Sun,1998-11-22,4:15PM,San Diego Chargers,,Kansas City Chiefs,boxscore,38,37,366,3,366,2
+12,Sun,1998-11-22,4:15PM,New York Jets,@,Tennessee Oilers,boxscore,24,3,361,0,223,1
+12,Sun,1998-11-22,8:20PM,San Francisco 49ers,,New Orleans Saints,boxscore,31,20,443,3,401,4
+12,Mon,1998-11-23,8:20PM,New England Patriots,,Miami Dolphins,boxscore,26,23,455,2,322,1
+13,Thu,1998-11-26,12:30PM,Detroit Lions,,Pittsburgh Steelers,boxscore,19,16,283,2,293,2
+13,Thu,1998-11-26,4:15PM,Minnesota Vikings,@,Dallas Cowboys,boxscore,46,36,471,1,513,0
+13,Sun,1998-11-29,1:00PM,Atlanta Falcons,@,St. Louis Rams,boxscore,21,10,374,1,169,0
+13,Sun,1998-11-29,1:00PM,New York Jets,,Carolina Panthers,boxscore,48,21,456,0,216,1
+13,Sun,1998-11-29,1:00PM,Tampa Bay Buccaneers,@,Chicago Bears,boxscore,31,17,267,2,224,2
+13,Sun,1998-11-29,1:00PM,Jacksonville Jaguars,@,Cincinnati Bengals,boxscore,34,17,322,0,355,4
+13,Sun,1998-11-29,1:00PM,Baltimore Ravens,,Indianapolis Colts,boxscore,38,31,314,0,540,1
+13,Sun,1998-11-29,1:00PM,Kansas City Chiefs,,Arizona Cardinals,boxscore,34,24,376,1,338,2
+13,Sun,1998-11-29,4:05PM,New England Patriots,,Buffalo Bills,boxscore,25,21,259,1,428,0
+13,Sun,1998-11-29,4:05PM,Seattle Seahawks,,Tennessee Oilers,boxscore,20,18,378,3,343,2
+13,Sun,1998-11-29,4:15PM,Green Bay Packers,,Philadelphia Eagles,boxscore,24,16,499,3,232,0
+13,Sun,1998-11-29,4:15PM,Miami Dolphins,,New Orleans Saints,boxscore,30,10,375,1,157,4
+13,Sun,1998-11-29,4:15PM,Washington Redskins,@,Oakland Raiders,boxscore,29,19,303,1,376,4
+13,Sun,1998-11-29,8:20PM,Denver Broncos,@,San Diego Chargers,boxscore,31,16,322,4,367,6
+13,Mon,1998-11-30,8:20PM,San Francisco 49ers,,New York Giants,boxscore,31,7,466,0,344,2
+14,Thu,1998-12-03,8:20PM,Philadelphia Eagles,,St. Louis Rams,boxscore,17,14,299,1,330,1
+14,Sun,1998-12-06,1:00PM,Atlanta Falcons,,Indianapolis Colts,boxscore,28,21,394,2,244,3
+14,Sun,1998-12-06,1:00PM,Buffalo Bills,@,Cincinnati Bengals,boxscore,33,20,448,3,234,1
+14,Sun,1998-12-06,1:00PM,San Francisco 49ers,@,Carolina Panthers,boxscore,31,28,474,2,429,3
+14,Sun,1998-12-06,1:00PM,New Orleans Saints,,Dallas Cowboys,boxscore,22,3,328,2,182,0
+14,Sun,1998-12-06,1:00PM,Jacksonville Jaguars,,Detroit Lions,boxscore,37,22,426,0,332,0
+14,Sun,1998-12-06,1:00PM,New England Patriots,@,Pittsburgh Steelers,boxscore,23,9,377,3,249,3
+14,Sun,1998-12-06,1:00PM,New York Jets,,Seattle Seahawks,boxscore,32,31,488,3,377,4
+14,Sun,1998-12-06,1:00PM,Washington Redskins,,San Diego Chargers,boxscore,24,20,278,2,344,2
+14,Sun,1998-12-06,4:05PM,New York Giants,@,Arizona Cardinals,boxscore,23,19,344,2,328,3
+14,Sun,1998-12-06,4:15PM,Denver Broncos,,Kansas City Chiefs,boxscore,35,31,476,3,266,1
+14,Sun,1998-12-06,4:15PM,Miami Dolphins,@,Oakland Raiders,boxscore,27,17,260,1,314,7
+14,Sun,1998-12-06,4:15PM,Tennessee Oilers,,Baltimore Ravens,boxscore,16,14,291,1,221,1
+14,Sun,1998-12-06,8:20PM,Minnesota Vikings,,Chicago Bears,boxscore,48,22,458,1,339,2
+14,Mon,1998-12-07,8:20PM,Tampa Bay Buccaneers,,Green Bay Packers,boxscore,24,22,283,1,333,2
+15,Sun,1998-12-13,1:00PM,Atlanta Falcons,@,New Orleans Saints,boxscore,27,17,504,3,216,4
+15,Sun,1998-12-13,1:00PM,Buffalo Bills,,Oakland Raiders,boxscore,44,21,316,0,178,4
+15,Sun,1998-12-13,1:00PM,Washington Redskins,@,Carolina Panthers,boxscore,28,25,409,0,365,3
+15,Sun,1998-12-13,1:00PM,Green Bay Packers,,Chicago Bears,boxscore,26,20,393,2,192,0
+15,Sun,1998-12-13,1:00PM,Indianapolis Colts,,Cincinnati Bengals,boxscore,39,26,338,0,378,0
+15,Sun,1998-12-13,1:00PM,Arizona Cardinals,@,Philadelphia Eagles,boxscore,20,17,424,2,367,1
+15,Sun,1998-12-13,1:00PM,New York Giants,,Denver Broncos,boxscore,20,16,392,2,329,1
+15,Sun,1998-12-13,1:00PM,Tennessee Oilers,@,Jacksonville Jaguars,boxscore,16,13,354,2,241,1
+15,Sun,1998-12-13,1:00PM,St. Louis Rams,,New England Patriots,boxscore,32,18,278,3,319,2
+15,Sun,1998-12-13,1:00PM,Tampa Bay Buccaneers,,Pittsburgh Steelers,boxscore,16,3,253,1,166,5
+15,Sun,1998-12-13,4:05PM,Seattle Seahawks,,San Diego Chargers,boxscore,38,17,238,3,277,8
+15,Sun,1998-12-13,4:15PM,Kansas City Chiefs,,Dallas Cowboys,boxscore,20,17,383,0,247,2
+15,Sun,1998-12-13,4:15PM,Minnesota Vikings,@,Baltimore Ravens,boxscore,38,28,420,1,267,6
+15,Sun,1998-12-13,8:20PM,New York Jets,@,Miami Dolphins,boxscore,21,16,314,2,357,2
+15,Mon,1998-12-14,8:20PM,San Francisco 49ers,,Detroit Lions,boxscore,35,13,409,1,380,2
+16,Sat,1998-12-19,12:30PM,New York Jets,@,Buffalo Bills,boxscore,17,10,269,0,366,2
+16,Sat,1998-12-19,4:15PM,Washington Redskins,,Tampa Bay Buccaneers,boxscore,20,16,226,2,237,3
+16,Sun,1998-12-20,1:00PM,Carolina Panthers,,St. Louis Rams,boxscore,20,13,246,1,261,4
+16,Sun,1998-12-20,1:00PM,Chicago Bears,,Baltimore Ravens,boxscore,24,3,391,0,178,1
+16,Sun,1998-12-20,1:00PM,Cincinnati Bengals,@,Pittsburgh Steelers,boxscore,25,24,483,2,211,2
+16,Sun,1998-12-20,1:00PM,Green Bay Packers,,Tennessee Oilers,boxscore,30,22,362,0,341,1
+16,Sun,1998-12-20,1:00PM,New York Giants,,Kansas City Chiefs,boxscore,28,7,309,0,279,4
+16,Sun,1998-12-20,1:00PM,New England Patriots,,San Francisco 49ers,boxscore,24,21,332,2,410,3
+16,Sun,1998-12-20,4:05PM,Seattle Seahawks,,Indianapolis Colts,boxscore,27,23,376,0,362,2
+16,Sun,1998-12-20,4:05PM,Oakland Raiders,@,San Diego Chargers,boxscore,17,10,287,3,315,3
+16,Sun,1998-12-20,4:15PM,Atlanta Falcons,@,Detroit Lions,boxscore,24,17,268,0,258,3
+16,Sun,1998-12-20,4:15PM,Arizona Cardinals,,New Orleans Saints,boxscore,19,17,513,3,320,1
+16,Sun,1998-12-20,4:15PM,Dallas Cowboys,,Philadelphia Eagles,boxscore,13,9,248,2,356,1
+16,Sun,1998-12-20,8:20PM,Minnesota Vikings,,Jacksonville Jaguars,boxscore,50,10,417,0,207,4
+16,Mon,1998-12-21,8:20PM,Miami Dolphins,,Denver Broncos,boxscore,31,21,391,2,219,2
+17,Sat,1998-12-26,12:30PM,Minnesota Vikings,@,Tennessee Oilers,boxscore,26,16,338,1,354,0
+17,Sat,1998-12-26,4:00PM,Kansas City Chiefs,@,Oakland Raiders,boxscore,31,24,373,3,321,2
+17,Sun,1998-12-27,1:00PM,Atlanta Falcons,,Miami Dolphins,boxscore,38,16,346,0,400,6
+17,Sun,1998-12-27,1:00PM,Buffalo Bills,@,New Orleans Saints,boxscore,45,33,308,0,366,3
+17,Sun,1998-12-27,1:00PM,Carolina Panthers,@,Indianapolis Colts,boxscore,27,19,332,2,279,2
+17,Sun,1998-12-27,1:00PM,Green Bay Packers,@,Chicago Bears,boxscore,16,13,239,3,281,3
+17,Sun,1998-12-27,1:00PM,Tampa Bay Buccaneers,@,Cincinnati Bengals,boxscore,35,0,320,1,246,3
+17,Sun,1998-12-27,1:00PM,Baltimore Ravens,,Detroit Lions,boxscore,19,10,295,1,236,1
+17,Sun,1998-12-27,1:00PM,New York Jets,,New England Patriots,boxscore,31,10,339,1,249,1
+17,Sun,1998-12-27,4:05PM,New York Giants,@,Philadelphia Eagles,boxscore,20,10,339,0,264,1
+17,Sun,1998-12-27,4:05PM,San Francisco 49ers,,St. Louis Rams,boxscore,38,19,397,0,321,1
+17,Sun,1998-12-27,4:15PM,Arizona Cardinals,,San Diego Chargers,boxscore,16,13,270,0,377,5
+17,Sun,1998-12-27,4:15PM,Denver Broncos,,Seattle Seahawks,boxscore,28,21,511,1,241,1
+17,Sun,1998-12-27,8:20PM,Dallas Cowboys,,Washington Redskins,boxscore,23,7,378,0,292,2
+17,Mon,1998-12-28,8:20PM,Jacksonville Jaguars,,Pittsburgh Steelers,boxscore,21,3,297,0,361,3
+WildCard,Sat,1999-01-02,12:30PM,Miami Dolphins,,Buffalo Bills,boxscore,24,17,345,1,416,5
+WildCard,Sat,1999-01-02,4:00PM,Arizona Cardinals,@,Dallas Cowboys,boxscore,20,7,346,2,260,3
+WildCard,Sun,1999-01-03,12:40PM,Jacksonville Jaguars,,New England Patriots,boxscore,25,10,308,0,206,3
+WildCard,Sun,1999-01-03,4:15PM,San Francisco 49ers,,Green Bay Packers,boxscore,30,27,347,3,403,4
+Division,Sat,1999-01-09,12:30PM,Atlanta Falcons,,San Francisco 49ers,boxscore,20,18,289,1,334,3
+Division,Sat,1999-01-09,4:15PM,Denver Broncos,,Miami Dolphins,boxscore,38,3,424,0,252,3
+Division,Sun,1999-01-10,12:40PM,New York Jets,,Jacksonville Jaguars,boxscore,34,24,429,3,251,4
+Division,Sun,1999-01-10,4:15PM,Minnesota Vikings,,Arizona Cardinals,boxscore,41,21,416,1,316,3
+ConfChamp,Sun,1999-01-17,12:30PM,Atlanta Falcons,@,Minnesota Vikings,boxscore,30,27,427,2,356,2
+ConfChamp,Sun,1999-01-17,4:05PM,Denver Broncos,,New York Jets,boxscore,23,10,331,0,370,6
+SuperBowl,Sun,1999-01-31,6:30PM,Denver Broncos,N,Atlanta Falcons,boxscore,34,19,457,1,337,4

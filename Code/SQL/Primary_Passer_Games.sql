@@ -46,5 +46,6 @@ select game_id
 	,passer_rank
 	,primary_game_number
 	,MAX(primary_game_number) over (partition by passer_player_id) as primary_passing_games
+	,min(game_id) over (partition_by_passer_player_id) as first_primary_passing_game
 from p
 ;
