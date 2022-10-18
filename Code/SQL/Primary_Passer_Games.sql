@@ -35,17 +35,20 @@ p as
 	order by passer_player_id
 		,game_id
 )
-select game_id 
-	,season
-	,week
-	,posteam
-	,passer_player_id 
-	,MAX(passer_player_name) over (partition by passer_player_id) as passer_player_name
-	,player_first_season
-	,player_last_season
-	,passer_rank
-	,primary_game_number
-	,MAX(primary_game_number) over (partition by passer_player_id) as primary_passing_games
-	,min(game_id) over (partition_by_passer_player_id) as first_primary_passing_game
+select P.game_id 
+	,P.season
+	,P.week
+	,l.current_team as posteam
+	,P.passer_player_id 
+	,MAX(P.passer_player_name) over (partition by P.passer_player_id) as passer_player_name
+	,P.player_first_season
+	,P.player_last_season
+	,P.passer_rank
+	,P.primary_game_number
+	,MAX(P.primary_game_number) over (partition by P.passer_player_id) as primary_passing_games
+	,min(P.game_id) over (partition by P.passer_player_id) as first_primary_passing_game
+	,FIRST_VALUE(P.posteam) over (partition by P.passer_player_id order by P.primary_game_number) as first_primary_passing_team
 from p
+left join public.historical_team_mapping l
+	on P.posteam = l.previous_team 
 ;

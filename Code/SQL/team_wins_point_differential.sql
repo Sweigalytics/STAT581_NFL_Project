@@ -35,8 +35,13 @@ team_games as
 ),
 team_wins_games as
 (
-	select *
-		,row_number() over (partition by z.team order by z.game_id) as team_game_number
+	select l.current_team as team
+		,Z.game_id
+		,Z.season
+		,Z.week
+		,Z.win
+		,Z.team_point_differential
+		,row_number() over (partition by l.current_team order by z.game_id) as team_game_number
 	from
 	(
 		select team
@@ -57,10 +62,13 @@ team_wins_games as
 		left join wins w 
 			on t.game_id = w.game_id
 	) Z
+	left join public.historical_team_mapping l
+		on Z.team = l.previous_team 
 )
 select T.*
 	,(SUM(T.win) over (partition by T.team order by T.team_game_number rows (select hurts_games from h) preceding) - T.win) as prior_hurts_games_wins
 	,((SUM(T.win) over (partition by T.team order by T.team_game_number rows (select hurts_games from h) preceding)) - T.win)::float / (select hurts_games from h) as prior_hurts_games_win_perc
+	,((SUM(T.team_point_differential) over (partition by T.team order by T.team_game_number rows (select hurts_games from h) preceding)) - T.team_point_differential) as prior_hurts_point_differential
 from team_wins_games T
 order by T.team
 	,T.team_game_number

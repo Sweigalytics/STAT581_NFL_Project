@@ -30,6 +30,9 @@ df_qbs <- df_prim %>% filter(player_first_season <= 2018)
 
 rownames(df_qbs) <- df_qbs$passer_player_id
 
+## Need to convert the point differential into numeric
+df_qbs <- df_qbs %>% mutate(net_point_differential_change = as.numeric(net_point_differential_change))
+
 ## Define a `franchise_qb` label if the QB played greater than or equal to the median. 
 df_qbs <- df_qbs %>% mutate(franchise_qb = if_else(primary_passing_games >= median_games_played, 1, 0))
 df_qbs <- df_qbs %>% mutate(across(franchise_qb, as.factor))
@@ -64,14 +67,16 @@ ggarrange(
   plot_interceptions_per_attempt,
   plot_fumbles_per_attempt,
   plot_turnovers_per_attempt,
-  plot_epa_per_play
+  plot_epa_per_play,
+  plot_net_win_percentage_change,
+  plot_net_point_differential_change
 )
 
 
 # Train/Test Split
 
 ### Only including the variables we want to consider for prediction.
-pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "franchise_qb")
+pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "franchise_qb")
 
 set.seed(581)
 spec = c(train = .8, test = .2)
@@ -110,7 +115,9 @@ ggarrange(
   plot_train_interceptions_per_attempt,
   plot_train_fumbles_per_attempt,
   plot_train_turnovers_per_attempt,
-  plot_train_epa_per_play
+  plot_train_epa_per_play,
+  plot_train_net_win_percentage_change,
+  plot_train_net_point_differential_change
 )
 
 # Training and Evaluating Predictive Models
@@ -140,7 +147,7 @@ summary(best.logit$BestModel)
 ### Fit with a LOOCV by defining the folds as the number of rows in the training data.
 grid <- 10^seq (10, -2, length = 100)
 
-logistic.fit <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 1, lambda = grid, nfolds = x.train.rows)
+logistic.fit <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 0.5, lambda = grid, nfolds = x.train.rows)
 
 plot(logistic.fit, xvar="lambda", label=TRUE)
 
@@ -157,18 +164,23 @@ logistic.confusion
 
 
 ## Random Forest
-x.train <- data.matrix(subset(df_qbs_train, select = -c(franchise_qb)))
-y.train <- data.matrix(df_qbs_train[, c('franchise_qb')])
 
-x.test <- data.matrix(subset(df_qbs_test, select = -c(franchise_qb)))
-y.test <- data.matrix(df_qbs_test[, c('franchise_qb')])
+### Need to remove NA rows. Unfortunately, the CPOE data only goes back to 2006 and removes some players that are still playing today.
+### Jalen Hurts is more recent and has full CPOE stats.
+df_qbs_train_nas_rm <- na.omit(df_qbs_train)
+
+x.train <- data.matrix(subset(df_qbs_train_nas_rm, select = -c(franchise_qb)))
+y.train <- data.matrix(df_qbs_train_nas_rm[, c('franchise_qb')])
+
+df_qbs_test_na_rm <- na.omit(df_qbs_test)
+
+x.test <- data.matrix(subset(df_qbs_test_na_rm, select = -c(franchise_qb)))
+y.test <- data.matrix(df_qbs_test_na_rm[, c('franchise_qb')])
 
 set.seed(581)
 
-#rf.fm <- formula(paste("franchise_qb", "~", pred_vars))
-
-rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train[, pred_vars], importance=TRUE, ntree=500)
-rf.pred <- predict(rf.fit, newdata = df_qbs_test)
+rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train_nas_rm[, pred_vars], importance=TRUE, ntree=500)
+rf.pred <- predict(rf.fit, newdata = df_qbs_test_na_rm)
 
 rf.confusion <- confusionMatrix(rf.pred, as.factor(y.test), mode = "everything", positive = "1")
 rf.confusion
@@ -231,3 +243,6 @@ xg.pred.labels <- as.factor(ifelse(xg.pred > 0.5,"1","0"))
 
 xgb.confusion <- confusionMatrix(xg.pred.labels, as.factor(y.test), mode = "everything", positive = "1")
 xgb.confusion
+
+importance_matrix = xgb.importance(colnames(dtrain), model = m1_xgb)
+xgb.plot.importance(importance_matrix)

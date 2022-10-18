@@ -35,14 +35,32 @@ select G.passer_player_id
 	,((P.passing_fumbles_lost + R.rushing_fumbles_lost) / (P.pass_attempts + R.rush_attempts))::float as fumbles_per_attempt
 	,((P.passing_interceptions + P.passing_fumbles_lost + R.rushing_fumbles_lost) / (P.pass_attempts + R.rush_attempts))::float as turnovers_per_attempt
 	,E.epa_per_play
+	,PR.prior_hurts_games_win_perc
+	,PR.prior_hurts_point_differential
+	,G.post_hurts_games_win_percentage
+	,G.post_hurts_games_point_differential
+	--Calculating pre vs. post QB starting win and point differential stats
+	,G.post_hurts_games_win_percentage - PR.prior_hurts_games_win_perc as net_win_percentage_change
+	,G.post_hurts_games_point_differential - PR.prior_hurts_point_differential as net_point_differential_change
 from
 (
-	select distinct passer_player_id 
-		,passer_player_name 
-		,player_first_season 
-		,player_last_season 
-		,primary_passing_games 
-	from public.primary_passer_games
+	select distinct 
+		P.passer_player_id 
+		,P.passer_player_name 
+		,P.player_first_season 
+		,P.player_last_season 
+		,P.primary_passing_games 
+		,P.first_primary_passing_game
+		,P.first_primary_passing_team
+		--Calculating team stats over the current player's first games as a primary passer
+		,SUM(case when P.primary_game_number <= (select hurts_games from h) then T.win else 0 END) over (partition by P.passer_player_id) as post_hurts_games_wins
+		,(SUM(case when P.primary_game_number <= (select hurts_games from h) then T.win else 0 END) over (partition by P.passer_player_id))::float 
+			/ COUNT(case when P.primary_game_number <= (select hurts_games from h) then P.game_id END) over (partition by P.passer_player_id) as post_hurts_games_win_percentage
+		,SUM(case when P.primary_game_number <= (select hurts_games from h) then T.team_point_differential else 0 END) over (partition by P.passer_player_id) as post_hurts_games_point_differential
+	from public.primary_passer_games P
+	left join public.team_wins_point_differential T
+		on P.game_id = T.game_id
+		and P.posteam = T.team
 ) G
 left join -- Joining the passing stats
 (
@@ -103,6 +121,9 @@ left join -- Joining EPA stats, which can be from either passing or rushing play
 	group by A.passer_player_id
 ) E
 	on G.passer_player_id = E.passer_player_id
+left join public.team_wins_point_differential PR
+	on G.first_primary_passing_game = PR.game_id
+	and G.first_primary_passing_team = PR.team
 where (P.passer_player_id is not null or R.rusher_player_id is not NULL) -- Ensures we only include players in `public.primary_passer_games_hurts_minimum`
 order by G.primary_passing_games DESC
 ;
