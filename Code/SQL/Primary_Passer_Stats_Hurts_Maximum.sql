@@ -13,6 +13,10 @@ select G.passer_player_id
 	,G.player_first_season
 	,G.player_last_season
 	,G.primary_passing_games
+	,G.first_primary_passing_game_date
+	,G.first_primary_passing_game_year
+	,G.hurts_game_date
+	,date_part('year', cast(G.hurts_game_date as date)) as hurts_game_year
 	,P.pass_attempts
 	,P.pass_successes
 	,P.passing_yards
@@ -52,7 +56,10 @@ from
 		,P.primary_passing_games 
 		,P.first_primary_passing_game
 		,P.first_primary_passing_team
+		,P.first_primary_passing_game_date
+		,date_part('year',cast(P.first_primary_passing_game_date as date)) as first_primary_passing_game_year
 		--Calculating team stats over the current player's first games as a primary passer
+		,max(case when P.primary_game_number <= (select hurts_games from h) then p.game_date END) over (partition by P.passer_player_id) as hurts_game_date
 		,SUM(case when P.primary_game_number <= (select hurts_games from h) then T.win else 0 END) over (partition by P.passer_player_id) as post_hurts_games_wins
 		,(SUM(case when P.primary_game_number <= (select hurts_games from h) then T.win else 0 END) over (partition by P.passer_player_id))::float 
 			/ COUNT(case when P.primary_game_number <= (select hurts_games from h) then P.game_id END) over (partition by P.passer_player_id) as post_hurts_games_win_percentage

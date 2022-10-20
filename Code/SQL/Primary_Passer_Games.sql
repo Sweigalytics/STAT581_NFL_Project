@@ -5,6 +5,7 @@ with q as
 	select p.game_id
 		,p.season
 		,p.week
+		,p.game_date
 		,MAX(p.posteam) as posteam -- to accommodate some missing values.
 		,p.passer_player_id 
 		,p.passer_player_name 
@@ -16,6 +17,7 @@ with q as
 	group by p.game_id
 		,p.season
 		,p.week
+		,p.game_date
 		,p.passer_player_id 
 		,p.passer_player_name
 ),
@@ -38,6 +40,7 @@ p as
 select P.game_id 
 	,P.season
 	,P.week
+	,p.game_date
 	,l.current_team as posteam
 	,P.passer_player_id 
 	,MAX(P.passer_player_name) over (partition by P.passer_player_id) as passer_player_name
@@ -47,6 +50,7 @@ select P.game_id
 	,P.primary_game_number
 	,MAX(P.primary_game_number) over (partition by P.passer_player_id) as primary_passing_games
 	,min(P.game_id) over (partition by P.passer_player_id) as first_primary_passing_game
+	,min(P.game_date) over (partition by P.passer_player_id) as first_primary_passing_game_date
 	,FIRST_VALUE(P.posteam) over (partition by P.passer_player_id order by P.primary_game_number) as first_primary_passing_team
 from p
 left join public.historical_team_mapping l

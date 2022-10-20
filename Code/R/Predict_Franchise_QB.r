@@ -199,7 +199,7 @@ y.test <- data.matrix(df_qbs_test[, c('franchise_qb')])
 dtrain <- xgb.DMatrix(data = x.train,label = y.train)
 dtest <- xgb.DMatrix(data = x.test, label = y.test)
 
-hyper_grid <- expand.grid(max_depth = seq(3, 6, 1), eta = seq(.2, .35, .01))  
+hyper_grid <- expand.grid(max_depth = seq(2, 6, 1), eta = seq(.1, .4, .005))  
 
 xgb_train_logloss <- NULL
 xgb_test_logloss <- NULL
