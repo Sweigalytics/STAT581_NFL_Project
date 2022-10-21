@@ -4,7 +4,10 @@ create table if not exists public.Primary_Passer_Stats_Hurts_Maximum_Contracts A
 select *
 from 
 (
-	select *
+	select P.*
+		--The number of days between the QB's first primary start to when they reached Hurts' number of games.
+		,(P.hurts_game_date::date - P.first_primary_passing_game_date::date) as days_to_hurts_game 
+		,C.*
 		,RANK() over (partition by P.passer_player_id order by C.year_signed) as contract_rank
 	from public.primary_passer_stats_hurts_maximum P
 	LEFT JOIN
