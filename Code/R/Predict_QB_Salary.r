@@ -1,6 +1,7 @@
 library(bestglm)
 library(caret)
 library(dplyr)
+library(leaps)
 library(glmnet)
 library(ggpubr)
 library(tidyverse)
@@ -26,28 +27,7 @@ df_qb_contracts <- df_qb_contracts %>% mutate(net_point_differential_change = as
 df_qb_contracts_hurts <- df_qb_contracts %>% filter(passer_player_id == '00-0036389')
 df_qb_contracts <- df_qb_contracts %>% filter(passer_player_id != '00-0036389')
 
-# Train/Test Split
-
-### Only including the variables we want to consider for prediction.
-pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "days_to_hurts_game")
-response_vars <- c("years", "inflated_value", "inflated_apy", "inflated_guaranteed")
-all_vars <- c(pred_vars, response_vars)
-
-set.seed(581)
-spec = c(train = .8, test = .2)
-
-g = sample(cut(
-  seq(nrow(df_qb_contracts)), 
-  nrow(df_qb_contracts)*cumsum(c(0,spec)),
-  labels = names(spec)
-))
-
-res = split(df_qb_contracts, g)
-
-df_qb_contracts_train <- res$train[ , all_vars]
-df_qb_contracts_test <- res$test[ , all_vars]
-
-# EDA
+EDA
 
 ## Histograms of QB Features
 num_cols <- colnames(select_if(df_qb_contracts, is.numeric))
@@ -81,6 +61,59 @@ ggarrange(
 )
 
 
+### Found that including QBs with `days_to_hurts_game` > 2000 brings in veteran QBs. Filtering them out and attempting histograms again.
+df_qb_contracts_nonvets <- df_qb_contracts %>% filter(days_to_hurts_game < 2000)
+
+for(i in num_cols){
+  
+  assign(paste('plot_',i,sep=""), 
+         ggplot(data=df_qb_contracts_nonvets, aes_string(x=i)) + geom_histogram(bins = nbins) + xlab(str_to_title(gsub("_"," ",i))) + theme(text = element_text(size = 8))
+  )
+}
+
+ggarrange(
+  plot_days_to_hurts_game,
+  plot_fumbles_per_attempt,
+  plot_interceptions_per_attempt,
+  plot_passing_yards_per_attempt,
+  plot_passing_completion_percentage,
+  plot_mean_cpoe,
+  plot_rushing_yards_per_attempt,
+  plot_primary_passing_tds_per_game,
+  plot_primary_rushing_tds_per_game,
+  plot_sacks_per_play,
+  plot_interceptions_per_attempt,
+  plot_fumbles_per_attempt,
+  plot_turnovers_per_attempt,
+  plot_epa_per_play,
+  plot_net_win_percentage_change,
+  plot_net_point_differential_change
+)
+
+
+# Train/Test Split
+
+### Only including the variables we want to consider for prediction.
+pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "days_to_hurts_game")
+response_vars <- c("years", "inflated_value", "inflated_apy", "inflated_guaranteed")
+all_vars <- c(pred_vars, response_vars)
+
+set.seed(581)
+spec = c(train = .8, test = .2)
+
+g = sample(cut(
+  seq(nrow(df_qb_contracts_nonvets)), 
+  nrow(df_qb_contracts_nonvets)*cumsum(c(0,spec)),
+  labels = names(spec)
+))
+
+res = split(df_qb_contracts_nonvets, g)
+
+df_qb_contracts_train <- res$train[ , all_vars]
+df_qb_contracts_test <- res$test[ , all_vars]
+
+
+
 # Training and Evaluating Predictive Models
 
 
@@ -89,11 +122,54 @@ ggarrange(
 ### Remove NAs
 df_qb_contracts_train_na_rm <- drop_na(df_qb_contracts_train)
 
-df_qbs_contracts_train.bglm <- rename(df_qb_contracts_train_na_rm[ , names(df_qb_contracts_train_na_rm) %in% c(pred_vars, "inflated_apy")], y=inflated_apy)
+df_qbs_contracts_train.bglm <- df_qb_contracts_train_na_rm[ , names(df_qb_contracts_train_na_rm) %in% c(pred_vars, "inflated_apy")]
 
-best.apy <- bestglm(df_qbs_contracts_train.bglm, IC = "BIC", family=gaussian, method="exhaustive")
+regfit.full <- regsubsets(inflated_apy ~ ., data = df_qbs_contracts_train.bglm, method = "exhaustive", nvmax = length(pred_vars))
 
-summary(best.apy$BestModel)
+reg.summary <- summary(regfit.full)
+
+par(mfrow = c(2 , 2))
+plot(reg.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
+
+plot(reg.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+max.adjr2 = which.max(reg.summary$adjr2)
+points(max.adjr2, reg.summary$adjr2[max.adjr2], col = "red", cex = 2, pch = 20)
+
+plot(reg.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
+min.cp = which.min(reg.summary$cp)
+points(min.cp, reg.summary$cp[min.cp], col = "red", cex = 2, pch = 20)
+
+plot(reg.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
+min.bic = which.min(reg.summary$bic)
+points(min.bic, reg.summary$bic[min.bic], col = "red", cex = 2, pch = 20)
+
+xvars <- dimnames(reg.summary$which)[[2]][-1]
+responsevar <- "inflated_apy"
+
+models_to_eval <- sort(unique(c(max.adjr2, min.cp, min.bic)))
+
+lst.apy <- vector("list", dim(reg.summary$which)[1])
+
+for (i in models_to_eval){
+  print(i)
+  id <- reg.summary$which[i, ]
+  form <- reformulate(xvars[which(id[-1])], responsevar, id[1])
+  lst.apy[[i]] <- lm(form, df_qbs_contracts_train.bglm)
+}
+
+### Predict 
+apy.adjr2.preds <- predict(lst.apy[[max.adjr2]], df_qb_contracts_test)
+apy.cp.preds <- predict(lst.apy[[min.cp]], df_qb_contracts_test)
+apy.bic.preds <- predict(lst.apy[[min.bic]], df_qb_contracts_test)
+
+apy.adjr2.mse <- mean((apy.adjr2.preds - df_qb_contracts_test$inflated_apy)^2)
+apy.cp.mse <- mean((apy.cp.preds - df_qb_contracts_test$inflated_apy)^2)
+apy.bic.mse <- mean((apy.bic.preds - df_qb_contracts_test$inflated_apy)^2)
+
+c(apy.adjr2.mse, apy.cp.mse, apy.bic.mse)
+
+cbind(apy.adjr2.preds, apy.cp.preds, apy.bic.preds, df_qb_contracts_test$inflated_apy)
+
 
 best.apy.model <- best.apy$BestModel
 
