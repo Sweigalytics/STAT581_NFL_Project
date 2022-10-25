@@ -90,7 +90,10 @@ g = sample(cut(
 res = split(df_qbs, g)
 
 df_qbs_train <- res$train[ , pred_vars]
+df_qbs_train <- df_qbs_train[, names(df_qbs_train) %in% pred_vars] # Removes some column names that appear ending in ".1"
+
 df_qbs_test <- res$test[ , pred_vars]
+df_qbs_test <- df_qbs_test[, names(df_qbs_test) %in% pred_vars] # Removes some column names that appear ending in ".1"
 
 
 ## Validating Training data is still normally distributed.
@@ -140,27 +143,75 @@ df_qbs_train.bglm <- rename(df_qbs_train, y=franchise_qb)
 
 best.logit <- bestglm(df_qbs_train.bglm, IC = "BIC", family=binomial, method="exhaustive")
 
+plot(best.logit$BestModel)
+
 summary(best.logit$BestModel)
 
 ## Ridge Regression/Lasso
 
 ### Fit with a LOOCV by defining the folds as the number of rows in the training data.
-grid <- 10^seq (10, -2, length = 100)
 
-logistic.fit <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 0.5, lambda = grid, nfolds = x.train.rows)
+### Lasso
+grid <- 10^seq (-1, -2, length = 500)
 
-plot(logistic.fit, xvar="lambda", label=TRUE)
+logistic.fit.lasso <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 1, lambda = grid, nfolds = x.train.rows)
 
-bestlam <- logistic.fit$lambda.min
+plot(logistic.fit.lasso, xvar="lambda", label=TRUE)
+
+bestlam.lasso <- logistic.fit.lasso$lambda.min
 
 x.test <- data.matrix(subset(df_qbs_test_scaled, select = -c(franchise_qb)))
 y.test <- data.matrix(df_qbs_test_scaled[, c('franchise_qb')])
 
-logistic.preds <- predict(logistic.fit, s = bestlam, newx = x.test, type = "class")
-logistic.preds
+logistic.lasso.preds <- predict(logistic.fit.lasso, s = bestlam.lasso, newx = x.test, type = "class")
+logistic.lasso.preds
 
-logistic.confusion <- confusionMatrix(as.factor(logistic.preds), as.factor(y.test), mode="everything", positive = "1")
-logistic.confusion
+logistic.lasso.confusion <- confusionMatrix(as.factor(logistic.lasso.preds), as.factor(y.test), mode="everything", positive = "1")
+logistic.lasso.confusion
+
+coef(logistic.fit.lasso, s = bestlam.lasso)
+
+
+### Ridge Regression
+grid <- 10^seq (10, -10, length = 500)
+
+logistic.fit.ridge <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 0, lambda = grid, nfolds = x.train.rows)
+
+plot(logistic.fit.ridge, xvar="lambda", label=TRUE)
+
+bestlam.ridge <- logistic.fit.ridge$lambda.min
+
+x.test <- data.matrix(subset(df_qbs_test_scaled, select = -c(franchise_qb)))
+y.test <- data.matrix(df_qbs_test_scaled[, c('franchise_qb')])
+
+logistic.ridge.preds <- predict(logistic.fit.ridge, s = bestlam.ridge, newx = x.test, type = "class")
+logistic.ridge.preds
+
+logistic.ridge.confusion <- confusionMatrix(as.factor(logistic.ridge.preds), as.factor(y.test), mode="everything", positive = "1")
+logistic.ridge.confusion
+
+coef(logistic.fit.ridge, s = bestlam.ridge)
+
+
+### Elastic Net
+grid <- 10^seq (-0.75, -3, length = 500)
+
+logistic.fit.elastic <- cv.glmnet(x.train, y.train, family = "binomial", alpha = 0.5, lambda = grid, nfolds = x.train.rows)
+
+plot(logistic.fit.elastic, xvar="lambda", label=TRUE)
+
+bestlam.elastic <- logistic.fit.elastic$lambda.min
+
+x.test <- data.matrix(subset(df_qbs_test_scaled, select = -c(franchise_qb)))
+y.test <- data.matrix(df_qbs_test_scaled[, c('franchise_qb')])
+
+logistic.elastic.preds <- predict(logistic.fit.elastic, s = bestlam.elastic, newx = x.test, type = "class")
+logistic.elastic.preds
+
+logistic.elastic.confusion <- confusionMatrix(as.factor(logistic.elastic.preds), as.factor(y.test), mode="everything", positive = "1")
+logistic.elastic.confusion
+
+coef(logistic.fit.elastic, s = bestlam.ridge)
 
 
 ## Random Forest
@@ -179,7 +230,7 @@ y.test <- data.matrix(df_qbs_test_na_rm[, c('franchise_qb')])
 
 set.seed(581)
 
-rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train_nas_rm[, pred_vars], importance=TRUE, ntree=500)
+rf.fit <- randomForest(franchise_qb ~ ., data = df_qbs_train_nas_rm[, pred_vars], importance=TRUE, ntree=1000)
 rf.pred <- predict(rf.fit, newdata = df_qbs_test_na_rm)
 
 rf.confusion <- confusionMatrix(rf.pred, as.factor(y.test), mode = "everything", positive = "1")
@@ -246,3 +297,17 @@ xgb.confusion
 
 importance_matrix = xgb.importance(colnames(dtrain), model = m1_xgb)
 xgb.plot.importance(importance_matrix)
+
+
+# Predictions
+df_qbs_hurts <- df_prim %>% filter(passer_player_id == '00-0036389')
+rownames(df_qbs_hurts) <- df_qbs_hurts$passer_player_id
+
+df_qbs_hurts[, colnames(df_qbs_hurts) %in% pred_vars]
+
+df_qbs_hurts_scaled <- predict(normParam, df_qbs_hurts[, colnames(df_qbs_hurts) %in% pred_vars])
+
+x.hurts <- data.matrix(df_qbs_hurts_scaled)
+
+predict(logistic.fit.lasso, s = bestlam.lasso, newx = x.hurts, type = "class")
+predict(logistic.fit.lasso, s = bestlam.lasso, newx = x.hurts, type = "response")
