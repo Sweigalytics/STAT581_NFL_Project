@@ -4,6 +4,7 @@ library(dplyr)
 library(leaps)
 library(glmnet)
 library(ggpubr)
+library(psych) # For EDA
 library(tidyverse)
 
 
@@ -28,6 +29,15 @@ df_qb_contracts_hurts <- df_qb_contracts %>% filter(passer_player_id == '00-0036
 df_qb_contracts <- df_qb_contracts %>% filter(passer_player_id != '00-0036389')
 
 # EDA
+
+### Only including the variables we want to consider for prediction.
+pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "days_to_hurts_game")
+response_vars <- c("years", "inflated_value", "inflated_apy", "inflated_guaranteed")
+all_vars <- c(pred_vars, response_vars)
+
+## Pulling summary statistics and writing to a CSV file to combine with the Word report.
+eda_df_qb_contracts <- describe(df_qb_contracts[, names(df_qb_contracts) %in% pred_vars], fast=TRUE)
+write.csv(eda_df_qb_contracts[order(row.names(eda_df_qbs)), ], "..\\..\\Report\\qb_contracts_eda.csv")
 
 ## Histograms of QB Features
 num_cols <- colnames(select_if(df_qb_contracts, is.numeric))
@@ -93,10 +103,7 @@ ggarrange(
 
 # Train/Test Split
 
-### Only including the variables we want to consider for prediction.
-pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "days_to_hurts_game")
-response_vars <- c("years", "inflated_value", "inflated_apy", "inflated_guaranteed")
-all_vars <- c(pred_vars, response_vars)
+
 
 set.seed(581)
 spec = c(train = .8, test = .2)

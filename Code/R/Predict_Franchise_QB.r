@@ -4,6 +4,7 @@ library(dplyr)
 library(DBI)
 library(glmnet)
 library(ggpubr)
+library(psych) # For EDA
 library(randomForest)
 library(tidyverse)
 library(xgboost)
@@ -40,6 +41,13 @@ df_qbs <- df_qbs %>% mutate(across(franchise_qb, as.factor))
 
 # EDA
 
+### Only including the variables we want to consider for prediction.
+pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "franchise_qb")
+
+## Pulling summary statistics and writing to a CSV file to combine with the Word report.
+eda_df_qbs <- describe(df_qbs[, names(df_qbs) %in% pred_vars], fast=TRUE)
+write.csv(eda_df_qbs[order(row.names(eda_df_qbs)), ], "..\\..\\Report\\franchise_qb_eda.csv")
+
 ## Histograms of QB Features
 num_cols <- colnames(select_if(df_qbs, is.numeric))
 
@@ -74,9 +82,6 @@ ggarrange(
 
 
 # Train/Test Split
-
-### Only including the variables we want to consider for prediction.
-pred_vars <- c("fumbles_per_attempt", "interceptions_per_attempt", "passing_yards_per_attempt", "passing_completion_percentage", "mean_cpoe", "rushing_yards_per_attempt", "primary_passing_tds_per_game", "primary_rushing_tds_per_game", "sacks_per_play", "interceptions_per_attempt", "fumbles_per_attempt", "turnovers_per_attempt", "epa_per_play", "net_win_percentage_change", "net_point_differential_change", "franchise_qb")
 
 set.seed(581)
 spec = c(train = .8, test = .2)
@@ -143,9 +148,12 @@ df_qbs_train.bglm <- rename(df_qbs_train, y=franchise_qb)
 
 best.logit <- bestglm(df_qbs_train.bglm, IC = "BIC", family=binomial, method="exhaustive")
 
-plot(best.logit$BestModel)
-
 summary(best.logit$BestModel)
+
+df_qbs_train.bglm <- rename(df_qbs_test, y=franchise_qb)
+
+predict(best.logit$BestModel, df_qbs_train.bglm)
+
 
 ## Ridge Regression/Lasso
 
@@ -169,6 +177,8 @@ logistic.lasso.preds
 logistic.lasso.confusion <- confusionMatrix(as.factor(logistic.lasso.preds), as.factor(y.test), mode="everything", positive = "1")
 logistic.lasso.confusion
 
+accuracy.logistic.lasso <- c("Logistic Regression LASSO", logistic.lasso.confusion$overall[["Accuracy"]])
+
 coef(logistic.fit.lasso, s = bestlam.lasso)
 
 
@@ -189,6 +199,8 @@ logistic.ridge.preds
 
 logistic.ridge.confusion <- confusionMatrix(as.factor(logistic.ridge.preds), as.factor(y.test), mode="everything", positive = "1")
 logistic.ridge.confusion
+
+accuracy.logistic.ridge <- c("Logistic Regression Ridge Regression", logistic.ridge.confusion$overall[["Accuracy"]])
 
 coef(logistic.fit.ridge, s = bestlam.ridge)
 
@@ -211,6 +223,8 @@ logistic.elastic.preds
 logistic.elastic.confusion <- confusionMatrix(as.factor(logistic.elastic.preds), as.factor(y.test), mode="everything", positive = "1")
 logistic.elastic.confusion
 
+accuracy.logistic.elastic <- c("Logistic Regression Elastic Net", logistic.elastic.confusion$overall[["Accuracy"]])
+
 coef(logistic.fit.elastic, s = bestlam.ridge)
 
 
@@ -223,7 +237,7 @@ df_qbs_train_nas_rm <- na.omit(df_qbs_train)
 x.train <- data.matrix(subset(df_qbs_train_nas_rm, select = -c(franchise_qb)))
 y.train <- data.matrix(df_qbs_train_nas_rm[, c('franchise_qb')])
 
-df_qbs_test_na_rm <- na.omit(df_qbs_test)
+df_qbs_test_na_rm <- na.omit(df_qbs_test[, pred_vars])
 
 x.test <- data.matrix(subset(df_qbs_test_na_rm, select = -c(franchise_qb)))
 y.test <- data.matrix(df_qbs_test_na_rm[, c('franchise_qb')])
@@ -235,6 +249,8 @@ rf.pred <- predict(rf.fit, newdata = df_qbs_test_na_rm)
 
 rf.confusion <- confusionMatrix(rf.pred, as.factor(y.test), mode = "everything", positive = "1")
 rf.confusion
+
+accuracy.rf <- c("Random Forest", rf.confusion$overall[["Accuracy"]])
 
 importance(rf.fit)
 varImpPlot(rf.fit)
@@ -295,9 +311,28 @@ xg.pred.labels <- as.factor(ifelse(xg.pred > 0.5,"1","0"))
 xgb.confusion <- confusionMatrix(xg.pred.labels, as.factor(y.test), mode = "everything", positive = "1")
 xgb.confusion
 
+accuracy.xgb <- c("XGBoost", xgb.confusion$overall[["Accuracy"]])
+
 importance_matrix = xgb.importance(colnames(dtrain), model = m1_xgb)
 xgb.plot.importance(importance_matrix)
 
+
+# Model Selection
+df_accuracy <- data.frame(rbind(accuracy.logistic.elastic,
+                                accuracy.logistic.lasso,
+                                accuracy.logistic.ridge,
+                                accuracy.rf,
+                                accuracy.xgb))
+
+
+colnames(df_accuracy) <- c("Model", "Overall Accuracy")
+
+df_accuracy$`Overall Accuracy` <- as.numeric(df_accuracy$`Overall Accuracy`)
+
+df_accuracy %>% arrange(desc(`Overall Accuracy`))
+
+ggplot(df_accuracy, aes(x = `Overall Accuracy`, y = reorder(Model, `Overall Accuracy`))) + geom_bar(stat = "identity") +
+  ylab("Predictive Model")
 
 # Predictions
 df_qbs_hurts <- df_prim %>% filter(passer_player_id == '00-0036389')
