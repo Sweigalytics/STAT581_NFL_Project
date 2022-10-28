@@ -37,7 +37,7 @@ all_vars <- c(pred_vars, response_vars)
 
 ## Pulling summary statistics and writing to a CSV file to combine with the Word report.
 eda_df_qb_contracts <- describe(df_qb_contracts[, names(df_qb_contracts) %in% pred_vars], fast=TRUE)
-write.csv(eda_df_qb_contracts[order(row.names(eda_df_qbs)), ], "..\\..\\Report\\qb_contracts_eda.csv")
+write.csv(eda_df_qb_contracts[order(row.names(eda_df_qb_contracts)), ], "..\\..\\Report\\qb_contracts_eda.csv")
 
 ## Histograms of QB Features
 num_cols <- colnames(select_if(df_qb_contracts, is.numeric))
@@ -131,7 +131,7 @@ df_qbs_contracts_train.bglm <- df_qb_contracts_train_na_rm[ , names(df_qb_contra
 num_vars <- length(pred_vars)
 
 
-## Fit Best Subsets
+## Fit Best Subsets APY
 regfit.full <- regsubsets(inflated_apy ~ ., data = df_qbs_contracts_train.bglm, method = "exhaustive", nvmax = num_vars)
 
 reg.summary <- summary(regfit.full)
@@ -140,42 +140,42 @@ par(mfrow = c(2 , 2))
 plot(reg.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
 
 plot(reg.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
-max.adjr2 = which.max(reg.summary$adjr2)
-points(max.adjr2, reg.summary$adjr2[max.adjr2], col = "red", cex = 2, pch = 20)
+max.adjr2.bs = which.max(reg.summary$adjr2)
+points(max.adjr2.bs, reg.summary$adjr2[max.adjr2.bs], col = "red", cex = 2, pch = 20)
 
 plot(reg.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
-min.cp = which.min(reg.summary$cp)
-points(min.cp, reg.summary$cp[min.cp], col = "red", cex = 2, pch = 20)
+min.cp.bs = which.min(reg.summary$cp)
+points(min.cp.bs, reg.summary$cp[min.cp.bs], col = "red", cex = 2, pch = 20)
 
 plot(reg.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
-min.bic = which.min(reg.summary$bic)
-points(min.bic, reg.summary$bic[min.bic], col = "red", cex = 2, pch = 20)
+min.bic.bs = which.min(reg.summary$bic)
+points(min.bic.bs, reg.summary$bic[min.bic.bs], col = "red", cex = 2, pch = 20)
 
 xvars <- dimnames(reg.summary$which)[[2]][-1]
 responsevar <- "inflated_apy"
 
-models_to_eval <- sort(unique(c(max.adjr2, min.cp, min.bic)))
+models_to_eval <- sort(unique(c(max.adjr2.bs, min.cp.bs, min.bic.bs)))
 
-lst.apy <- vector("list", dim(reg.summary$which)[1])
+lst.bs.apy <- vector("list", dim(reg.summary$which)[1])
 
 for (i in models_to_eval){
   print(i)
   id <- reg.summary$which[i, ]
   form <- reformulate(xvars[which(id[-1])], responsevar, id[1])
-  lst.apy[[i]] <- lm(form, df_qbs_contracts_train.bglm)
+  lst.bs.apy[[i]] <- lm(form, df_qbs_contracts_train.bglm)
 }
 
 ### Predict Best Subsets
-apy.bs.adjr2.preds <- predict(lst.apy[[max.adjr2]], df_qb_contracts_test)
-apy.bs.cp.preds <- predict(lst.apy[[min.cp]], df_qb_contracts_test)
-apy.bs.bic.preds <- predict(lst.apy[[min.bic]], df_qb_contracts_test)
+apy.bs.adjr2.preds <- predict(lst.bs.apy[[max.adjr2.bs]], df_qb_contracts_test)
+apy.bs.cp.preds <- predict(lst.bs.apy[[min.cp.bs]], df_qb_contracts_test)
+apy.bs.bic.preds <- predict(lst.bs.apy[[min.bic.bs]], df_qb_contracts_test)
 
-mse.bs.adjr2 <- mean((df_qb_contracts_test$inflated_apy - apy.bs.adjr2.preds)^2)
-mse.bs.cp <- mean((df_qb_contracts_test$inflated_apy - apy.bs.cp.preds)^2)
-mse.bs.bic <- mean((df_qb_contracts_test$inflated_apy - apy.bs.bic.preds)^2)
+mse.bs.adjr2 <- c("APY","Best Subsets","Adj R^2",mean((df_qb_contracts_test$inflated_apy - apy.bs.adjr2.preds)^2))
+mse.bs.cp <- c("APY","Best Subsets", "Cp",mean((df_qb_contracts_test$inflated_apy - apy.bs.cp.preds)^2))
+mse.bs.bic <- c("APY","Best Subsets", "BIC",mean((df_qb_contracts_test$inflated_apy - apy.bs.bic.preds)^2))
 
 
-## Fit Forward Stepwise
+## Fit Forward Stepwise APY
 regfit.fwd <- regsubsets(inflated_apy ~ ., df_qbs_contracts_train.bglm, method = "forward", nvmax = num_vars)
 reg.fwd.summary <- summary(regfit.fwd)
 
@@ -183,21 +183,21 @@ par(mfrow = c(2 , 2))
 plot(reg.fwd.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
 
 plot(reg.fwd.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
-max.adjr2 = which.max(reg.fwd.summary$adjr2)
-points(max.adjr2, reg.fwd.summary$adjr2[max.adjr2], col = "red", cex = 2, pch = 20)
+max.adjr2.fwd = which.max(reg.fwd.summary$adjr2)
+points(max.adjr2.fwd, reg.fwd.summary$adjr2[max.adjr2.fwd], col = "red", cex = 2, pch = 20)
 
 plot(reg.fwd.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
-min.cp = which.min(reg.fwd.summary$cp)
-points(min.cp, reg.fwd.summary$cp[min.cp], col = "red", cex = 2, pch = 20)
+min.cp.fwd = which.min(reg.fwd.summary$cp)
+points(min.cp.fwd, reg.fwd.summary$cp[min.cp.fwd], col = "red", cex = 2, pch = 20)
 
 plot(reg.fwd.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
-min.bic = which.min(reg.fwd.summary$bic)
-points(min.bic, reg.fwd.summary$bic[min.bic], col = "red", cex = 2, pch = 20)
+min.bic.fwd = which.min(reg.fwd.summary$bic)
+points(min.bic.fwd, reg.fwd.summary$bic[min.bic.fwd], col = "red", cex = 2, pch = 20)
 
 xvars <- dimnames(reg.fwd.summary$which)[[2]][-1]
 responsevar <- "inflated_apy"
 
-models_to_eval <- sort(unique(c(max.adjr2, min.cp, min.bic)))
+models_to_eval <- sort(unique(c(max.adjr2.fwd, min.cp.fwd, min.bic.fwd)))
 
 lst.fwd.apy <- vector("list", dim(reg.fwd.summary$which)[1])
 
@@ -209,16 +209,16 @@ for (i in models_to_eval){
 }
 
 ### Predict Forward Stepwise
-apy.fwd.adjr2.preds <- predict(lst.fwd.apy[[max.adjr2]], df_qb_contracts_test)
-apy.fwd.cp.preds <- predict(lst.fwd.apy[[min.cp]], df_qb_contracts_test)
-apy.fwd.bic.preds <- predict(lst.fwd.apy[[min.bic]], df_qb_contracts_test)
+apy.fwd.adjr2.preds <- predict(lst.fwd.apy[[max.adjr2.fwd]], df_qb_contracts_test)
+apy.fwd.cp.preds <- predict(lst.fwd.apy[[min.cp.fwd]], df_qb_contracts_test)
+apy.fwd.bic.preds <- predict(lst.fwd.apy[[min.bic.fwd]], df_qb_contracts_test)
 
-mse.fwd.adjr2 <- mean((df_qb_contracts_test$inflated_apy - apy.fwd.adjr2.preds)^2)
-mse.fwd.cp <- mean((df_qb_contracts_test$inflated_apy - apy.fwd.cp.preds)^2)
-mse.fwd.bic <- mean((df_qb_contracts_test$inflated_apy - apy.fwd.bic.preds)^2)
+mse.fwd.adjr2 <- c("APY","Forward Stepwise","Adj R^2",mean((df_qb_contracts_test$inflated_apy - apy.fwd.adjr2.preds)^2))
+mse.fwd.cp <- c("APY","Forward Stepwise","Cp",mean((df_qb_contracts_test$inflated_apy - apy.fwd.cp.preds)^2))
+mse.fwd.bic <- c("APY","Forward Stepwise","BIC",mean((df_qb_contracts_test$inflated_apy - apy.fwd.bic.preds)^2))
 
 
-## Backward Stepwise
+## Backward Stepwise APY
 regfit.bwd <- regsubsets(inflated_apy ~ ., df_qbs_contracts_train.bglm, method = "backward", nvmax = num_vars)
 reg.bwd.summary <- summary(regfit.bwd)
 
@@ -226,21 +226,21 @@ par(mfrow = c(2 , 2))
 plot(reg.bwd.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
 
 plot(reg.bwd.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
-max.adjr2 = which.max(reg.bwd.summary$adjr2)
-points(max.adjr2, reg.bwd.summary$adjr2[max.adjr2], col = "red", cex = 2, pch = 20)
+max.adjr2.bwd = which.max(reg.bwd.summary$adjr2)
+points(max.adjr2.bwd, reg.bwd.summary$adjr2[max.adjr2.bwd], col = "red", cex = 2, pch = 20)
 
 plot(reg.bwd.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
-min.cp = which.min(reg.bwd.summary$cp)
-points(min.cp, reg.bwd.summary$cp[min.cp], col = "red", cex = 2, pch = 20)
+min.cp.bwd = which.min(reg.bwd.summary$cp)
+points(min.cp.bwd, reg.bwd.summary$cp[min.cp.bwd], col = "red", cex = 2, pch = 20)
 
 plot(reg.bwd.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
-min.bic = which.min(reg.bwd.summary$bic)
-points(min.bic, reg.bwd.summary$bic[min.bic], col = "red", cex = 2, pch = 20)
+min.bic.bwd = which.min(reg.bwd.summary$bic)
+points(min.bic.bwd, reg.bwd.summary$bic[min.bic.bwd], col = "red", cex = 2, pch = 20)
 
 xvars <- dimnames(reg.bwd.summary$which)[[2]][-1]
 responsevar <- "inflated_apy"
 
-models_to_eval <- sort(unique(c(max.adjr2, min.cp, min.bic)))
+models_to_eval <- sort(unique(c(max.adjr2.bwd, min.cp.bwd, min.bic.bwd)))
 
 lst.bwd.apy <- vector("list", dim(reg.bwd.summary$which)[1])
 
@@ -252,13 +252,59 @@ for (i in models_to_eval){
 }
 
 ### Predict Backward Stepwise
-apy.bwd.adjr2.preds <- predict(lst.bwd.apy[[max.adjr2]], df_qb_contracts_test)
-apy.bwd.cp.preds <- predict(lst.bwd.apy[[min.cp]], df_qb_contracts_test)
-apy.bwd.bic.preds <- predict(lst.bwd.apy[[min.bic]], df_qb_contracts_test)
+apy.bwd.adjr2.preds <- predict(lst.bwd.apy[[max.adjr2.bwd]], df_qb_contracts_test)
+apy.bwd.cp.preds <- predict(lst.bwd.apy[[min.cp.bwd]], df_qb_contracts_test)
+apy.bwd.bic.preds <- predict(lst.bwd.apy[[min.bic.bwd]], df_qb_contracts_test)
 
-mse.bwd.adjr2 <- mean((df_qb_contracts_test$inflated_apy - apy.bwd.adjr2.preds)^2)
-mse.bwd.cp <- mean((df_qb_contracts_test$inflated_apy - apy.bwd.cp.preds)^2)
-mse.bwd.bic <- mean((df_qb_contracts_test$inflated_apy - apy.bwd.bic.preds)^2)
+mse.bwd.adjr2 <- c("APY","Best Subsets","Adj R^2",mean((df_qb_contracts_test$inflated_apy - apy.bwd.adjr2.preds)^2))
+mse.bwd.cp <- c("APY","Best Subsets","Cp",mean((df_qb_contracts_test$inflated_apy - apy.bwd.cp.preds)^2))
+mse.bwd.bic <- c("APY","Best Subsets","BIC",mean((df_qb_contracts_test$inflated_apy - apy.bwd.bic.preds)^2))
+
+
+## Fit Best Subsets Years
+df_qbs_contracts_train.bglm <- df_qb_contracts_train_na_rm[ , names(df_qb_contracts_train_na_rm) %in% c(pred_vars, "years")]
+
+regfit.full.years <- regsubsets(years ~ ., data = df_qbs_contracts_train.bglm, method = "exhaustive", nvmax = num_vars)
+
+reg.summary.years <- summary(regfit.full.years)
+
+par(mfrow = c(2 , 2))
+plot(reg.summary.years$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
+
+plot(reg.summary.years$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+max.adjr2.bs.years = which.max(reg.summary.years$adjr2)
+points(max.adjr2.bs.years, reg.summary.years$adjr2[max.adjr2.bs.years], col = "red", cex = 2, pch = 20)
+
+plot(reg.summary.years$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
+min.cp.bs.years = which.min(reg.summary.years$cp)
+points(min.cp.bs.years, reg.summary.years$cp[min.cp.bs.years], col = "red", cex = 2, pch = 20)
+
+plot(reg.summary.years$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
+min.bic.bs.years = which.min(reg.summary.years$bic)
+points(min.bic.bs.years, reg.summary.years$bic[min.bic.bs.years], col = "red", cex = 2, pch = 20)
+
+xvars <- dimnames(reg.summary.years$which)[[2]][-1]
+responsevar <- "years"
+
+models_to_eval <- sort(unique(c(max.adjr2.bs.years, min.cp.bs.years, min.bic.bs.years)))
+
+lst.bs.years <- vector("list", dim(reg.summary.years$which)[1])
+
+for (i in models_to_eval){
+  print(i)
+  id <- reg.summary.years$which[i, ]
+  form <- reformulate(xvars[which(id[-1])], responsevar, id[1])
+  lst.bs.years[[i]] <- lm(form, df_qbs_contracts_train.bglm)
+}
+
+### Predict Best Subsets Years
+years.bs.adjr2.preds <- predict(lst.bs.years[[max.adjr2.bs.years]], df_qb_contracts_test)
+years.bs.cp.preds <- predict(lst.bs.years[[min.cp.bs.years]], df_qb_contracts_test)
+years.bs.bic.preds <- predict(lst.bs.years[[min.bic.bs.years]], df_qb_contracts_test)
+
+mse.years.bs.adjr2 <- c("Years","Best Subsets","Adj R^2",mean((df_qb_contracts_test$years - years.bs.adjr2.preds)^2, na.rm=TRUE))
+mse.years.bs.cp <- c("Years","Best Subsets", "Cp",mean((df_qb_contracts_test$years - years.bs.cp.preds)^2,na.rm=TRUE))
+mse.years.bs.bic <- c("Years","Best Subsets", "BIC",mean((df_qb_contracts_test$years - years.bs.bic.preds)^2,na.rm=TRUE))
 
 
 ## Forward Stepwise Fitting Years
@@ -272,21 +318,21 @@ par(mfrow = c(2 , 2))
 plot(reg.fwd.years.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
 
 plot(reg.fwd.years.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
-max.adjr2 = which.max(reg.fwd.years.summary$adjr2)
-points(max.adjr2, reg.fwd.years.summary$adjr2[max.adjr2], col = "red", cex = 2, pch = 20)
+max.adjr2.fwd.years = which.max(reg.fwd.years.summary$adjr2)
+points(max.adjr2.fwd.years, reg.fwd.years.summary$adjr2[max.adjr2.fwd.years], col = "red", cex = 2, pch = 20)
 
 plot(reg.fwd.years.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
-min.cp = which.min(reg.fwd.years.summary$cp)
-points(min.cp, reg.fwd.years.summary$cp[min.cp], col = "red", cex = 2, pch = 20)
+min.cp.fwd.years = which.min(reg.fwd.years.summary$cp)
+points(min.cp.fwd.years, reg.fwd.years.summary$cp[min.cp.fwd.years], col = "red", cex = 2, pch = 20)
 
 plot(reg.fwd.years.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
-min.bic = which.min(reg.fwd.years.summary$bic)
-points(min.bic, reg.fwd.years.summary$bic[min.bic], col = "red", cex = 2, pch = 20)
+min.bic.fwd.years = which.min(reg.fwd.years.summary$bic)
+points(min.bic.fwd.years, reg.fwd.years.summary$bic[min.bic.fwd.years], col = "red", cex = 2, pch = 20)
 
 xvars <- dimnames(reg.fwd.years.summary$which)[[2]][-1]
 responsevar <- "years"
 
-models_to_eval <- sort(unique(c(max.adjr2, min.cp, min.bic)))
+models_to_eval <- sort(unique(c(max.adjr2.fwd.years, min.cp.fwd.years, min.bic.fwd.years)))
 
 lst.fwd.years <- vector("list", dim(reg.fwd.years.summary$which)[1])
 
@@ -299,13 +345,60 @@ for (i in models_to_eval){
 
 ### Predict Forward Stepwise Years
 
-years.fwd.adjr2.preds <- predict(lst.fwd.years[[max.adjr2]], df_qb_contracts_test)
-years.fwd.cp.preds <- predict(lst.fwd.years[[min.cp]], df_qb_contracts_test)
-years.fwd.bic.preds <- predict(lst.fwd.years[[min.bic]], df_qb_contracts_test)
+years.fwd.adjr2.preds <- predict(lst.fwd.years[[max.adjr2.fwd.years]], df_qb_contracts_test)
+years.fwd.cp.preds <- predict(lst.fwd.years[[min.cp.fwd.years]], df_qb_contracts_test)
+years.fwd.bic.preds <- predict(lst.fwd.years[[min.bic.fwd.years]], df_qb_contracts_test)
 
-mse.years.fwd.adjr2 <- mean((df_qb_contracts_test$years - years.fwd.adjr2.preds)^2)
-mse.years.fwd.cp <- mean((df_qb_contracts_test$years - years.fwd.cp.preds)^2)
-mse.years.fwd.bic <- mean((df_qb_contracts_test$years - years.fwd.bic.preds)^2)
+mse.years.fwd.adjr2 <- c("Years","Forward Stepwise","Adj R^2",mean((df_qb_contracts_test$years - years.fwd.adjr2.preds)^2, na.rm=TRUE))
+mse.years.fwd.cp <- c("Years","Forward Stepwise","Cp",mean((df_qb_contracts_test$years - years.fwd.cp.preds)^2, na.rm=TRUE))
+mse.years.fwd.bic <- c("Years","Forward Stepwise","BIC",mean((df_qb_contracts_test$years - years.fwd.bic.preds)^2, na.rm=TRUE))
+
+
+## Backward Stepwise Fitting Years
+
+df_qbs_contracts_train.bglm <- df_qb_contracts_train_na_rm[ , names(df_qb_contracts_train_na_rm) %in% c(pred_vars, "years")]
+
+regfit.bwd.years <- regsubsets(years ~ ., df_qbs_contracts_train.bglm, method = "backward", nvmax = num_vars)
+reg.bwd.years.summary <- summary(regfit.bwd.years)
+
+par(mfrow = c(2 , 2))
+plot(reg.bwd.years.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
+
+plot(reg.bwd.years.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+max.adjr2.bwd.years = which.max(reg.bwd.years.summary$adjr2)
+points(max.adjr2.bwd.years, reg.bwd.years.summary$adjr2[max.adjr2.bwd.years], col = "red", cex = 2, pch = 20)
+
+plot(reg.bwd.years.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
+min.cp.bwd.years = which.min(reg.bwd.years.summary$cp)
+points(min.cp.bwd.years, reg.bwd.years.summary$cp[min.cp.bwd.years], col = "red", cex = 2, pch = 20)
+
+plot(reg.bwd.years.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
+min.bic.bwd.years = which.min(reg.bwd.years.summary$bic)
+points(min.bic.bwd.years, reg.bwd.years.summary$bic[min.bic.bwd.years], col = "red", cex = 2, pch = 20)
+
+xvars <- dimnames(reg.bwd.years.summary$which)[[2]][-1]
+responsevar <- "years"
+
+models_to_eval <- sort(unique(c(max.adjr2.bwd.years, min.cp.bwd.years, min.bic.bwd.years)))
+
+lst.bwd.years <- vector("list", dim(reg.bwd.years.summary$which)[1])
+
+for (i in models_to_eval){
+  print(i)
+  id <- reg.bwd.years.summary$which[i, ]
+  form <- reformulate(xvars[which(id[-1])], responsevar, id[1])
+  lst.bwd.years[[i]] <- lm(form, df_qbs_contracts_train.bglm)
+}
+
+### Predict Backward Stepwise Years
+
+years.bwd.adjr2.preds <- predict(lst.bwd.years[[max.adjr2.bwd.years]], df_qb_contracts_test)
+years.bwd.cp.preds <- predict(lst.bwd.years[[min.cp.bwd.years]], df_qb_contracts_test)
+years.bwd.bic.preds <- predict(lst.bwd.years[[min.bic.bwd.years]], df_qb_contracts_test)
+
+mse.years.bwd.adjr2 <- c("Years","Backward Stepwise","Adj R^2",mean((df_qb_contracts_test$years - years.bwd.adjr2.preds)^2, na.rm=TRUE))
+mse.years.bwd.cp <- c("Years","Backward Stepwise","Cp",mean((df_qb_contracts_test$years - years.bwd.cp.preds)^2, na.rm=TRUE))
+mse.years.bwd.bic <- c("Years","Backward Stepwise","BIC",mean((df_qb_contracts_test$years - years.bwd.bic.preds)^2, na.rm=TRUE))
 
 
 ## Lasso
@@ -358,7 +451,7 @@ y.test <- data.matrix(df_qbs_contracts_test_scaled[, c('inflated_apy')])
 
 lasso.preds <- predict(lasso.fit, s = bestlam.lasso.apy, newx = x.test)
 
-mse.lasso.apy <- mean((lasso.preds - df_qb_contracts_test$inflated_apy)^2)
+mse.lasso.apy <- c("APY","Lasso","N/A",mean((lasso.preds - df_qb_contracts_test$inflated_apy)^2))
 
 coef(lasso.fit, s = bestlam.lasso.apy)
 
@@ -369,7 +462,7 @@ y.train.years <- data.matrix(df_qbs_contracts_train_scaled[, c('years')])
 
 x.train.rows <- dim(x.train.years)[1]
 
-grid <- 10^seq (10, -2, length = 1000)
+grid <- 10^seq (10, -1.7, length = 1000)
 
 lasso.fit.years <- cv.glmnet(x.train.years, y.train.years, family = "gaussian", alpha = 1, lambda = grid, nfolds = x.train.rows)
 
@@ -386,7 +479,7 @@ y.test.years <- data.matrix(df_qbs_contracts_test_scaled[, c('years')])
 
 lasso.preds.years <- predict(lasso.fit.years, s = bestlam, newx = x.test.years)
 
-mse.lasso.years <- mean((lasso.preds.years - df_qb_contracts_test$years)^2)
+mse.lasso.years <- c("Years","Lasso","N/A",mean((lasso.preds.years - df_qb_contracts_test$years)^2))
 
 coef(lasso.fit.years, s = bestlam)
 
@@ -403,12 +496,12 @@ plot(rr.fit$glmnet.fit, "lambda", label=TRUE)
 
 bestlam <- rr.fit$lambda.min
 
-x.test <- data.matrix(subset(df_qbs_contracts_test_scaled, select = -c(inflated_apy)))
+x.test <- data.matrix(df_qbs_contracts_test_scaled[, names(df_qbs_contracts_test_scaled) %in% pred_vars])
 y.test <- data.matrix(df_qbs_contracts_test_scaled[, c('inflated_apy')])
 
 rr.preds <- predict(rr.fit, s = bestlam, newx = x.test)
 
-mse.rr <- mean((rr.preds - df_qb_contracts_test$inflated_apy)^2)
+mse.rr.apy <- c("APY","Ridge Regression","N/A",mean((rr.preds - df_qb_contracts_test$inflated_apy)^2))
 
 coef(rr.fit, s = bestlam)
 
@@ -436,19 +529,64 @@ y.test.years <- data.matrix(df_qbs_contracts_test_scaled[, c('years')])
 
 rr.preds.years <- predict(rr.fit.years, s = bestlam, newx = x.test.years)
 
-mse.rr.years <- mean((rr.preds.years - df_qb_contracts_test$years)^2)
+mse.rr.years <- c("Years","Ridge Regression","N/A",mean((rr.preds.years - df_qb_contracts_test$years)^2))
 
 coef(lasso.fit.years, s = bestlam)
 
 
+# Model Selection
 
-# Check Winning Model's Assumptions
-lasso.fit$lambda[bestlam]
+## APY
+df_accuracy_apy <- data.frame(rbind(mse.bs.adjr2,
+                                mse.bs.cp,
+                                mse.bs.bic,
+                                mse.fwd.adjr2,
+                                mse.fwd.cp,
+                                mse.fwd.bic,
+                                mse.bwd.adjr2,
+                                mse.bwd.cp,
+                                mse.bwd.bic,
+                                mse.lasso.apy,
+                                mse.rr.apy
+                                ))
 
-cbind(apy.fwd.bic.preds,rr.preds, lasso.preds, df_qb_contracts_test$inflated_apy)
+colnames(df_accuracy_apy) <- c("Response", "Variable Selection Method", "Information Criteria", "MSE")
 
-df_qbs_contracts_hurts_scaled <- predict(normParam, df_qb_contracts_hurts)
+df_accuracy_apy$MSE <- as.numeric(df_accuracy_apy$MSE)
 
-x.test.hurts <- data.matrix(df_qbs_contracts_hurts_scaled[, names(df_qbs_contracts_hurts_scaled) %in% pred_vars])
+df_accuracy_apy %>% arrange(MSE)
 
-predict(lasso.fit, s = bestlam.lasso.apy, newx = x.test.hurts)
+## Years
+
+df_accuracy_years <- data.frame(rbind(mse.years.bs.adjr2,
+                                    mse.years.bs.cp,
+                                    mse.years.bs.bic,
+                                    mse.years.fwd.adjr2,
+                                    mse.years.fwd.cp,
+                                    mse.years.fwd.bic,
+                                    mse.years.bwd.adjr2,
+                                    mse.years.bwd.cp,
+                                    mse.years.bwd.bic,
+                                    mse.lasso.years,
+                                    mse.rr.years
+                                    ))
+
+colnames(df_accuracy_years) <- c("Response", "Variable Selection Method", "Information Criteria", "MSE")
+
+df_accuracy_years$MSE <- as.numeric(df_accuracy_years$MSE)
+
+df_accuracy_years %>% arrange(MSE)
+
+
+# Check Winning Model's Assumptions (Example here: http://www.sthda.com/english/articles/39-regression-model-diagnostics/161-linear-regression-assumptions-and-diagnostics-in-r-essentials/)
+par(mfrow = c(2, 2))
+plot(lst.fwd.apy[[min.bic.fwd]])
+
+plot(lst.fwd.years[[min.bic.fwd.years]])
+
+
+# Predict Hurts
+
+predict(lst.fwd.apy[[min.bic.fwd]], df_qb_contracts_hurts, interval="predict") # 40.91069 
+
+predict(lst.fwd.years[[min.bic.fwd.years]], df_qb_contracts_hurts, interval="predict")
